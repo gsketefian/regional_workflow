@@ -787,11 +787,22 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# 50-km HRRR Alaska grid.
+# 25-km HRRR Alaska grid.
+#
+# Important note:
+# There used to be a 50-km HRRR Alaska grid, but it was apparently too
+# coarse for ESMF regridding because using it resulting in the following
+# ESMF error message during the make_ics task: 
+#
+#   "Can't currently regrid a grid that contains a DE of width less than 2."
+#
+# Not sure what a DE is, but in any case the 50-km grid is apparently 
+# too coarse.  For this reason, the 50-km grid was removed and replaced
+# with this 25-km grid.
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HRRR_AK_50km")
+"GSD_HRRR_AK_25km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
@@ -806,18 +817,18 @@ predefined domain:
     JPgrid_LON_CTR=-163.5
     JPgrid_LAT_CTR=62.8
 
-    JPgrid_DELX="50000.0"
-    JPgrid_DELY="50000.0"
+    JPgrid_DELX="25000.0"
+    JPgrid_DELY="25000.0"
 
-    JPgrid_NX=74
-    JPgrid_NY=51
+    JPgrid_NX=148
+    JPgrid_NY=102
 
     JPgrid_WIDE_HALO_WIDTH=6
 
-    DT_ATMOS="600"
+    DT_ATMOS="300"
 
-    LAYOUT_X="2"
-    LAYOUT_Y="3"
+    LAYOUT_X="4"
+    LAYOUT_Y="6"
     BLOCKSIZE="37"
 
     if [ "$QUILTING" = "TRUE" ]; then
@@ -828,8 +839,8 @@ predefined domain:
       WRTCMP_cen_lat="${JPgrid_LAT_CTR}"
       WRTCMP_stdlat1="${JPgrid_LAT_CTR}"
       WRTCMP_stdlat2="${JPgrid_LAT_CTR}"
-      WRTCMP_nx="70"
-      WRTCMP_ny="45"
+      WRTCMP_nx="140"
+      WRTCMP_ny="91"
       WRTCMP_lon_lwr_left="172.0"
       WRTCMP_lat_lwr_left="49.0"
       WRTCMP_dx="${JPgrid_DELX}"

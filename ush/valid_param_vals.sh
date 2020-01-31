@@ -4,7 +4,7 @@ valid_vals_MACHINE=("WCOSS_C" "WCOSS" "DELL" "THEIA" "HERA" "JET" "ODIN" "CHEYEN
 valid_vals_PREDEF_GRID_NAME=( \
 "EMC_CONUS_3km" "EMC_CONUS_coarse" "EMC_AK" \
 "GSD_HAFSV0.A3km" "GSD_HAFSV0.A13km" "GSD_HAFSV0.A25km" \
-"GSD_HRRR_AK_3km" "GSD_HRRR_AK_50km" \
+"GSD_HRRR_AK_3km" "GSD_HRRR_AK_25km" \
 "GSD_HRRR3km" "GSD_HRRR13km" "GSD_HRRR25km" \
 "GSD_RAP13km" )
 valid_vals_EMC_GRID_NAME=("ak" "conus" "conus_c96" "conus_orig" "guam" "hi" "pr")
