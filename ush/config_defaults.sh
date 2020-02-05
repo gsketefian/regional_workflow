@@ -607,9 +607,9 @@ BLOCKSIZE="24"
 # Flag for whether or not to output extra (debugging) information from
 # ESMF routines.  Must be ".true." or ".false.".  Note that the write
 # component uses ESMF library routines to interpolate from the native
-# forecast model grid to the user-specified output grid (which is defined in the
-# model configuration file MODEL_CONFIG_FN in the forecast's run direc-
-# tory).
+# forecast model grid to the user-specified output grid (which is defined
+# in the model configuration file MODEL_CONFIG_FN in the forecast's run
+# directory).
 #
 #-----------------------------------------------------------------------
 #
@@ -626,7 +626,7 @@ WRTCMP_lon_lwr_left=""
 WRTCMP_lat_lwr_left=""
 #
 # The following are used only for the case of WRTCMP_output_grid set to
-# "'rotated_latlon'".
+# "'rotated_latlon'" or "'regional_latlon'".
 #
 WRTCMP_lon_upr_rght=""
 WRTCMP_lat_upr_rght=""

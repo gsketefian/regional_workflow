@@ -529,7 +529,8 @@ if [ "$QUILTING" = "TRUE" ]; then
   set_file_param "${model_config_fp}" "lon1" "$WRTCMP_lon_lwr_left"
   set_file_param "${model_config_fp}" "lat1" "$WRTCMP_lat_lwr_left"
 
-  if [ "${WRTCMP_output_grid}" = "rotated_latlon" ]; then
+  if [ "${WRTCMP_output_grid}" = "rotated_latlon" ] || \
+     [ "${WRTCMP_output_grid}" = "regional_latlon" ]; then
     set_file_param "${model_config_fp}" "lon2" "$WRTCMP_lon_upr_rght"
     set_file_param "${model_config_fp}" "lat2" "$WRTCMP_lat_upr_rght"
     set_file_param "${model_config_fp}" "dlon" "$WRTCMP_dlon"
@@ -541,11 +542,6 @@ if [ "$QUILTING" = "TRUE" ]; then
     set_file_param "${model_config_fp}" "ny" "$WRTCMP_ny"
     set_file_param "${model_config_fp}" "dx" "$WRTCMP_dx"
     set_file_param "${model_config_fp}" "dy" "$WRTCMP_dy"
-  elif [ "${WRTCMP_output_grid}" = "regional_latlon" ]; then
-    set_file_param "${model_config_fp}" "lon2" "$WRTCMP_lon_upr_rght"
-    set_file_param "${model_config_fp}" "lat2" "$WRTCMP_lat_upr_rght"
-    set_file_param "${model_config_fp}" "dlon" "$WRTCMP_dlon"
-    set_file_param "${model_config_fp}" "dlat" "$WRTCMP_dlat"
   fi
 
 fi
