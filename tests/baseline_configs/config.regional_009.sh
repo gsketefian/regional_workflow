@@ -61,15 +61,34 @@ EXTRN_MDL_NAME_LBCS="FV3GFS"
 #RUN_TASK_MAKE_OROG="FALSE"
 #RUN_TASK_MAKE_SFC_CLIMO="FALSE"
 
+#
+# Note:
+#
+# * RUN is a variable containing a descriptive string for the experiment
+#   that is used in forming the variable COMOUT.  COMOUT contains the 
+#   full path to the directory in which output files genrated by the post
+#   processor will be placed.
+# * COMINgfs is the full path to the directory containing files from the 
+#   external model (FV3GFS).
+# * STMP is the full path to the directory that mostly contains input 
+#   files.
+# * PTMP is the full path to the directory in which the experiment's 
+#   output files will be placed.
+#
 RUN="an_experiment"
-COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"     # Path to directory containing files from the external model (FV3GFS).
-STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"  # Path to directory STMP that mostly contains input files.
-PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"  # Path to directory PTMP in which the experiment's output files will be placed.
-
-#On Jet
-#COMINgfs="/lfs1/projects/hwrf-data/hafs-input/COMGFS"     # Path to directory containing files from the external model (FV3GFS).
-#STMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/stmp"  # Path to directory STMP that mostly contains input files.
-#PTMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/ptmp"  # Path to directory PTMP in which the experiment's output files will be placed.
+if [ "${MACHINE^^}" = "HERA" ]; then
+  COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
+  STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
+  PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
+elif [ "${MACHINE^^}" = "JET" ]; then
+  COMINgfs="/lfs1/projects/hwrf-data/hafs-input/COMGFS"
+  STMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/stmp"
+  PTMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/ptmp"
+else
+  COMINgfs="/not/specified/for/this/machine"
+  STMP="/not/specified/for/this/machine"
+  PTMP="/not/specified/for/this/machine"
+fi
 
 #
 # In NCO mode, the user must manually (e.g. after doing the build step)

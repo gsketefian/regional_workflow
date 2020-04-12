@@ -52,16 +52,20 @@ EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
 
 RUN_TASK_MAKE_GRID="FALSE"
-GRID_DIR="/scratch2/BMC/det/FV3SAR_pregen/grid/GSD_HRRR25km"
-
 RUN_TASK_MAKE_OROG="FALSE"
-OROG_DIR="/scratch2/BMC/det/FV3SAR_pregen/orog/GSD_HRRR25km"
-
 RUN_TASK_MAKE_SFC_CLIMO="FALSE"
-SFC_CLIMO_DIR="/scratch2/BMC/det/FV3SAR_pregen/sfc_climo/GSD_HRRR25km"
 
-#On Jet
-#GRID_DIR="/lfs3/projects/wrfruc/beck/FV3SAR_pregen/grid/GSD_HRRR25km"
-#OROG_DIR="/lfs3/projects/wrfruc/beck/FV3SAR_pregen/orog/GSD_HRRR25km"
-#SFC_CLIMO_DIR="/lfs3/projects/wrfruc/beck/FV3SAR_pregen/sfc_climo/GSD_HRRR25km"
+if [ "${MACHINE^^}" = "HERA" ]; then
+  GRID_DIR="/scratch2/BMC/det/FV3SAR_pregen/grid/GSD_HRRR25km"
+  OROG_DIR="/scratch2/BMC/det/FV3SAR_pregen/orog/GSD_HRRR25km"
+  SFC_CLIMO_DIR="/scratch2/BMC/det/FV3SAR_pregen/sfc_climo/GSD_HRRR25km"
+elif [ "${MACHINE^^}" = "JET" ]; then
+  GRID_DIR="/lfs3/projects/wrfruc/beck/FV3SAR_pregen/grid/GSD_HRRR25km"
+  OROG_DIR="/lfs3/projects/wrfruc/beck/FV3SAR_pregen/orog/GSD_HRRR25km"
+  SFC_CLIMO_DIR="/lfs3/projects/wrfruc/beck/FV3SAR_pregen/sfc_climo/GSD_HRRR25km"
+else
+  GRID_DIR="/not/specified/for/this/machine"
+  OROG_DIR="/not/specified/for/this/machine"
+  SFC_CLIMO_DIR="/not/specified/for/this/machine"
+fi
 
