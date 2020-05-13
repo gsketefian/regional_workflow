@@ -227,7 +227,9 @@ begin
 ;
 ; **********************************************************************
 ;
+; Maybe read in the new parameter DOT_OR_USCORE from the var_defns.sh file.
     grid_fn = cres + "_grid.tile" + n_tile
+;    grid_fn = cres + ".grid.tile" + n_tile
     if (strcmp_exact(gtype, "regional") .and. (n_tile .eq. 7)) then
       grid_fn = grid_fn + ".halo" + tostring(nhalo_T7) + ".nc"
     else

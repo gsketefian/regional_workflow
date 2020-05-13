@@ -235,16 +235,22 @@ example_usage_and_help_str
 ;
 ; **********************************************************************
 ;
+;$ sed --silent --regexp-extended --expression 's/^[ ]*(CRES=)["]*C([0-9]+)(["]*)(.*)/\2/p' /scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/expt_dirs/regional_001_old001/var_defns.sh
+
+;  cmd = "sed --silent --regexp-extended --expression " \
+;      + "'s/^[ ]*CRES=[" + char_dq + "]*(C[0-9]+)([" + char_dq + "]*)(.*)/\1/p' " \
   cmd = "sed --silent --regexp-extended --expression " \
-      + "'s/^[ ]*(RES=)([" + char_dq + "]*)([0-9]+)([" + char_dq + "]*)(.*)/\3/p' " \
+      + "'s/^[ ]*CRES=" + char_dq + "?(C[0-9]+)([" + char_dq + "]*)(.*)/\1/p' " \
       + var_defns_fn
-  res := systemfunc(cmd)
+print("cmd is:   " + cmd)
+  cres := systemfunc(cmd)
 ; 
 ; Get the last occurrence of "RES=..." in the variable defintions file
 ; since that's the one that matters.
 ;
-  num_elems = dimsizes(res)
-  res := res(num_elems-1)
+;  num_elems = dimsizes(res)
+;  res := res(num_elems-1)
+print("GGGGGGG  cres = " + cres)
 ;
 ; **********************************************************************
 ;
@@ -285,7 +291,7 @@ end if
 ; **********************************************************************
 ;
 ;  cres := "C" + tostring_with_format(res, "%i")
-  cres := "C" + res
+;  cres := "C" + res
 
 
 

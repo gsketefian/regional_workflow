@@ -90,15 +90,15 @@ begin
 ; Read in the cell vertex coordinates.
 ; 
 ; **********************************************************************
-; 
+;
   if (strcmp_exact(coord_sys, "rotated_latlon") .or. \
       strcmp_exact(coord_sys, "lambert_conformal")) then
 
-    lon_verts := fp->grid_xt(:,:)
-    lat_verts := fp->grid_yt(:,:)
+    lon_verts := fp->lon(:,:)
+    lat_verts := fp->lat(:,:)
 
-lon_verts = lon_verts*degs_per_rad
-lat_verts = lat_verts*degs_per_rad
+;lon_verts = lon_verts*degs_per_rad
+;lat_verts = lat_verts*degs_per_rad
 
   else
 

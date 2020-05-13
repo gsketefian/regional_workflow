@@ -23,6 +23,8 @@ expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/FV3SAR_demo_PASPBL_2019072
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/FV3SAR_demo_PASPBL_20190725/expt_dirs/test_GSD_HRRR3km"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/FV3SAR_demo_PASPBL_20190725/expt_dirs/test_GSD_HAFSV0.A"
 
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/expt_dirs/regional_001_old001"
+CDATE="2019052000"
 
 tile_inds := (/ 1, 7, 4 /)
 ;tile_inds := (/ 1, 4 /)
@@ -159,7 +161,8 @@ field_name_RAP = "sqrt_cell_area"
 ; This is for HRRR grib2 file.
 field_name_RAP = "VGTYP_P0_L1_GLC0"
 
-RAP_dir = "/scratch1/BMC/fim/Gerard.Ketefian/regional_FV3_EMC_visit_20180509"
+;RAP_dir = "/scratch1/BMC/fim/Gerard.Ketefian/regional_FV3_EMC_visit_20180509"
+RAP_dir = "/scratch1/BMC/gsd-fv3-dev/Gerard.Ketefian/regional_FV3_EMC_visit_20180509"
 ;RAP_grid_fn = "/home/Gerard/fv3_regional/fv3sar_workflow/ush/NCL/plot_grid.ncl"
 ;RAP_grid_fn = "/scratch3/BMC/fim/Gerard.Ketefian/regional_FV3_EMC_visit_20180509/geo_em.d01.RAP.nc"
 ;RAP_grid_fn = RAP_dir + "/geo_em.d01.RAP.nc"
@@ -226,6 +229,7 @@ load "plot_horiz_field.ncl"
 load "set_file_field_names.ncl"
 load "get_wrtcmp_grid.ncl"
 load "calc_wrtcmp_grid_params_lambert_cnfrml.ncl"
+load "calc_wrtcmp_grid_params.ncl"
 load "make_plot_titles.ncl"
 
 begin
@@ -512,7 +516,8 @@ end if
 
 ;  rd := "/scratch3/BMC/det/Gerard.Ketefian/UFS_CAM_test_instructions/expt_dirs/NX1800_NY1120_A0p21423_Kmns0p23209_HRRR_test_cycl_slurm_01/2017090700"
 ;  rd := "/scratch3/BMC/det/Gerard.Ketefian"
-  rd := run_dir + "/2019052000"
+;  rd := run_dir + "/2019052000"
+  rd := expt_dir + "/2019052000"
 
   wrtcmp_config_fn := rd + "/model_configure"
 ;  wrtcmp_config_tmpl_fn = wrtcmp_config_fn + ".tmpl"
@@ -523,6 +528,7 @@ end if
 ;
 ; **********************************************************************
 ;
+;if (False) then
   if (show_wrtcmp_grid .or. show_wrtcmp_bdy) then
 print("")
 print("wrtcmp_config_fn = " + char_dq + wrtcmp_config_fn + char_dq)
@@ -546,20 +552,23 @@ pause
     print("lat_grid_cntr_wrtcmp = " + lat_grid_cntr_wrtcmp + " deg")
 pause
 
-
-    out := calc_wrtcmp_grid_params( \
-           wrtcmp_config_fn, \
-           lon_ctr_native, lat_ctr_native, \
-           lon_tile_corners_face_midpts_native, \
-           lat_tile_corners_face_midpts_native, \
-           dx_native, dy_native, \
-           angle_units)
-
-print("")
-print("out = " + out)
-pause
+;lon_ctr_native = lon_grid_cntr_wrtcmp
+;lat_ctr_native = lat_grid_cntr_wrtcmp
+;
+;    out := calc_wrtcmp_grid_params( \
+;           wrtcmp_config_fn, \
+;           lon_ctr_native, lat_ctr_native, \
+;           lon_tile_corners_face_midpts_native, \
+;           lat_tile_corners_face_midpts_native, \
+;           dx_native, dy_native, \
+;           angle_units)
+;
+;print("")
+;print("out = " + out)
+;pause
 
   end if
+;end if
 ;
 ; **********************************************************************
 ;
@@ -600,6 +609,7 @@ pause
 
   else
 
+print("HHHHHHHHHHh  cres = " + cres)
   grid_info := read_FV3SAR_grid_native( \
                expt_dir, \
                gtype, \
@@ -975,7 +985,7 @@ pause
      nxSG_tiles_to_plot, \
      nySG_tiles_to_plot, \
 \
-     run_dir, \
+     expt_dir+"/"+CDATE, \
      file_basename, \
      nxh_tiles_to_plot, \
      nyh_tiles_to_plot, \
@@ -1045,6 +1055,8 @@ pause
            )
 
       else
+print("")
+print("XXXXXXXXXXX")
 
         field_info \
         := read_FV3SAR_field_native( \
@@ -1060,6 +1072,9 @@ pause
            average_in_x, average_in_y)
 
       end if
+
+print("")
+print("YYYYYYYYYYYY")
 
 ;      fp_field_FV3SAR = field_info@fp  ; This would in general be an array or list of file pointers.
       field_desc := field_info@field_desc
@@ -1130,6 +1145,7 @@ inds_tiles_to_plot_str + " ..."
 ; **********************************************************************
 ;
       field_unstruc_all_grids := field_unstruc
+print("AAAAAAA   dimsizes(field_unstruc_all_grids) = " + dimsizes(field_unstruc_all_grids))
 ;
 ; **********************************************************************
 ;
@@ -1146,6 +1162,10 @@ inds_tiles_to_plot_str + " ..."
 ;
 ; **********************************************************************
 ;
+field_name_RAP = "AAAA"
+field_desc_RAP = "BBBB"
+field_units_RAP = "CCCC"
+
       if (show_RAP_grid .or. plot_RAP_field) then
 ;
 ; **********************************************************************
@@ -1198,6 +1218,8 @@ inds_tiles_to_plot_str + " ..."
         field_unstruc_all_grids \
         := array_append_record( \
            field_unstruc_RAP, field_unstruc_all_grids, 0)
+print("")
+print("BBBBBB   dimsizes(field_unstruc_all_grids) = " + dimsizes(field_unstruc_all_grids))
 
       end if
 ;
@@ -1263,6 +1285,7 @@ inds_tiles_to_plot_str + " ..."
 ;
 ; **********************************************************************
 ;
+nn=0
       title_info \
       := make_plot_titles( \
          inds_tiles_to_plot, \
@@ -1600,6 +1623,10 @@ end if
 
 ; Temporarily make the field all missing/fill values, so we can see grids/boundaries.
 ;field_unstruc_all_grids = field_unstruc_all_grids@_FillValue
+
+print("nx_all_grids = " + nx_all_grids)
+print("")
+print("CCCCCCC   dimsizes(field_unstruc_all_grids) = " + dimsizes(field_unstruc_all_grids))
 
       plot_info := plot_horiz_field( \
                    fn_graphics, \

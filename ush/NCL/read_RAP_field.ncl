@@ -54,7 +54,7 @@ begin
   print("  RAP_fn = " + char_dq + RAP_fn + char_dq)
 
 ; Modify for grib2 file.
-RAP_fn = RAP_fn + ".grb2"
+;RAP_fn = RAP_fn + ".grb2"
 
   fp = addfile(RAP_fn, "r")
 ;
@@ -124,9 +124,14 @@ RAP_fn = RAP_fn + ".grb2"
     field_desc = "MIN(dx, dy)"
     field_units = horiz_dist_units
 
+  else if (strcmp_exact(field_name, "XLAT_M")) then
+  
+    field_desc = "Latitude at Mass Points"
+    field_units = "-"
+
   else if (strcmp_exact(field_name, "VGTYP_P0_L1_GLC0")) then
   
-    field_desc = "Vegetation type"
+    field_desc = "Vegetation Type"
     field_units = "-"
 
   else
@@ -134,6 +139,7 @@ RAP_fn = RAP_fn + ".grb2"
     field_desc = "Unknown Field"
     field_units = "?"
   
+  end if
   end if
   end if
   end if

@@ -535,6 +535,11 @@ char_dq + var_dim_names(var_rank-2) + char_dq + char_nl + \
   x_dim_size = var_dim_sizes(var_rank-1)
   y_dim_size = var_dim_sizes(var_rank-2)
 
+; Don't bother checking dimensions since one grid is the native while the
+; other is the write-component grid, which are usually different. 
+ average_in_x = False
+average_in_y = False
+if (False) then
   if ((x_dim_size .eq. nx) .and. (y_dim_size .eq. ny)) then
     average_in_x = False
     average_in_y = False
@@ -569,6 +574,7 @@ char_dq + var_dim_names(var_rank-2) + char_dq + char_nl + \
   end if
   end if
   end if
+end if
 ;
 ; **********************************************************************
 ;
