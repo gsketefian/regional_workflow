@@ -1788,6 +1788,7 @@ The MPI task layout is:
 #
 #-----------------------------------------------------------------------
 #
+if [ 0 = 1 ]; then
 nx_per_task=$(( NX/LAYOUT_X ))
 ny_per_task=$(( NY/LAYOUT_Y ))
 num_cols_per_task=$(( $nx_per_task*$ny_per_task ))
@@ -1806,6 +1807,7 @@ BLOCKSIZE:
 The prime factors of num_cols_per_task are (useful for determining a va-
 lid BLOCKSIZE): 
   prime_factors_num_cols_per_task: ${prime_factors_num_cols_per_task}"
+fi
 fi
 #
 #-----------------------------------------------------------------------
