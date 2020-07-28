@@ -543,6 +543,30 @@ to this script (scrfunc_fp):
 #
   case "${expt_name}" in
 #
+  "regional_002")
+    case "$machine" in
+    "hera")
+      EXTRN_MDL_SOURCE_DIR_ICS=""
+      EXTRN_MDL_FILES_ICS=( "" )
+      EXTRN_MDL_SOURCE_DIR_LBCS=""
+      EXTRN_MDL_FILES_LBCS=( "" )
+      ;;
+    "cheyenne")
+      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
+      ;;
+    esac
+
+    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
+    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
+    ;;
+#
   "user_staged_extrn_files_FV3GFS")
     case "$machine" in
     "hera")

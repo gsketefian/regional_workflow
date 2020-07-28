@@ -45,7 +45,8 @@ RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
 #
-# These will be filled in by the script that runs the WE2E tests.
+# If necessary, these will be filled in by the script that runs the WE2E 
+# tests.
 #
 EXTRN_MDL_SOURCE_DIR_ICS=""
 EXTRN_MDL_FILES_ICS=( "" )

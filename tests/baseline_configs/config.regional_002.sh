@@ -6,6 +6,10 @@
 MACHINE=""
 ACCOUNT=""
 EXPT_SUBDIR=""
+
+QUEUE_DEFAULT=""
+QUEUE_HPSS=""
+QUEUE_FCST=""
 #
 # The values of the variables USE_CRON_TO_RELAUNCH and CRON_RELAUNCH_INTVL_MNTS
 # are optional inputs to the script that launces the WE2E test experiments.  
@@ -15,11 +19,6 @@ EXPT_SUBDIR=""
 #
 USE_CRON_TO_RELAUNCH="TRUE"
 CRON_RELAUNCH_INTVL_MNTS="02"
-
-
-QUEUE_DEFAULT="batch"
-QUEUE_HPSS="service"
-QUEUE_FCST="batch"
 
 VERBOSE="TRUE"
 
@@ -44,4 +43,13 @@ EXTRN_MDL_NAME_LBCS="FV3GFS"
 RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
+
+#
+# If necessary, these will be filled in by the script that runs the WE2E 
+# tests.
+#
+EXTRN_MDL_SOURCE_DIR_ICS=""
+EXTRN_MDL_FILES_ICS=( "" )
+EXTRN_MDL_SOURCE_DIR_LBCS=""
+EXTRN_MDL_FILES_LBCS=( "" )
 
