@@ -574,7 +574,7 @@ to this script (scrfunc_fp):
       EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
       EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
       EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
-      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
+      EXTRN_MDL_FILES_LBCS=( "gfs.atmf006.nemsio" )
       ;;
     "cheyenne")
       EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
