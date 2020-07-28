@@ -66,6 +66,9 @@ valid_args=( \
 "use_cron_to_relaunch" \
 "cron_relaunch_intvl_mnts" \
 )
+#"queue_default" \
+#"queue_hpss" \
+#"queue_fcst" \
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -288,7 +291,7 @@ Processing experiment \"${expts_list[$i]}\" ..."
 # Get the names and corresponding values of the variables that need to
 # be modified in the current baseline to obtain the current experiment.
 # The following while-loop steps through all the variables listed in 
-# "remainder"
+# "remainder".
 #
   modvar_name=()
   modvar_value=()
@@ -340,8 +343,8 @@ Please correct and rerun."
 #
 # We require that EXPT_SUBDIR in the configuration file for the baseline 
 # be set to the name of the baseline.  Check for this by extracting the
-# value of EXPT_SUBDIR from the baseline configuration file and compa-
-# ring it to baseline_name.
+# value of EXPT_SUBDIR from the baseline configuration file and comparing 
+# it to baseline_name.
 #
 if [ 0 = 1 ]; then
   regex_search="^[ ]*EXPT_SUBDIR=(\")?([^ =\"]+)(.*)"
@@ -386,12 +389,12 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set the name of the experiment subdirectory (EXPT_SUBDIR) in the expe-
-# riment configuration file to the name of the current experiment.
+# Source the experiment configuration file to obtain user-specified 
+# workflow variables.
 #
 #-----------------------------------------------------------------------
 #
-  set_bash_param "${expt_config_fp}" "EXPT_SUBDIR" "${expt_subdir}"
+  . "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
@@ -405,21 +408,215 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "$machine" ]; then
-    set_bash_param "${expt_config_fp}" "MACHINE" "$machine"
-  fi
+#  if [ ! -z "$machine" ]; then
+#    set_bash_param "${expt_config_fp}" "MACHINE" "$machine"
+#  fi
+#
+#  if [ ! -z "$account" ]; then
+#    set_bash_param "${expt_config_fp}" "ACCOUNT" "$account"
+#  fi
+#
+#  if [ ! -z "${queue_default}" ]; then
+#    set_bash_param "${expt_config_fp}" "QUEUE_DEFAULT" "${queue_default}"
+#  fi
+#
+#  if [ ! -z "${queue_hpss}" ]; then
+#    set_bash_param "${expt_config_fp}" "QUEUE_HPSS" "${queue_hpss}"
+#  fi
+#
+#  if [ ! -z "${queue_fcst}" ]; then
+#    set_bash_param "${expt_config_fp}" "QUEUE_FCST" "${queue_fcst}"
+#  fi
 
-  if [ ! -z "$account" ]; then
-    set_bash_param "${expt_config_fp}" "ACCOUNT" "$account"
-  fi
-
+#  if [ ! -z "${use_cron_to_relaunch}" ]; then
+#    set_bash_param "${expt_config_fp}" "USE_CRON_TO_RELAUNCH" "${use_cron_to_relaunch}"
+#  fi
+#
+#  if [ ! -z "${cron_relaunch_intvl_mnts}" ]; then
+#    set_bash_param "${expt_config_fp}" "CRON_RELAUNCH_INTVL_MNTS" "${cron_relaunch_intvl_mnts}"
+#  fi
+#
+#-----------------------------------------------------------------------
+#
+# If MACHINE, ACCOUNT, and EXPT_SUBDIR are not set in the experiment
+# configuration file, set them to the corresponding local variables (in 
+# lowercase) set above.
+# 
+# Note that the arguments "machine" and "account" to this script get 
+# checked (above) to ensure that they have been specified (i.e. not 
+# empty).  Also, the local variable "expt_subdir" will always have a 
+# valid, non-empty value.
+#
+#-----------------------------------------------------------------------
+#
+  MACHINE=${MACHINE:-$machine}
+  ACCOUNT=${ACCOUNT:-$account}
+  EXPT_SUBDIR=${EXPT_SUBDIR:-${expt_subdir}}
+#
+#-----------------------------------------------------------------------
+#
+# If the optional arguments "use_cron_to_relaunch" and "cron_relaunch_intvl_mnts"
+# to this script have been specified (i.e. not emtpy), set the workflow
+# variables USE_CRON_TO_RELAUNCH and CRON_RELAUNCH_INTVL_MNTS to these 
+# values.  If not, ensure that the latter two have been specified (i.e.
+# set to non-empty values) in the experiment configuration file.
+#
+#-----------------------------------------------------------------------
+#
   if [ ! -z "${use_cron_to_relaunch}" ]; then
-    set_bash_param "${expt_config_fp}" "USE_CRON_TO_RELAUNCH" "${use_cron_to_relaunch}"
+    USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch}
+  else
+    if [ -z "${USE_CRON_TO_RELAUNCH}" ]; then
+      print_err_msg_exit "\
+The workflow variable USE_CRON_TO_RELAUNCH cannot be set to an empty 
+string:
+  USE_CRON_TO_RELAUNCH = \"${USE_CRON_TO_RELAUNCH}\"
+Please set this variable to a nonempty value in the experiment configuration 
+file (expt_config_fp), or set it using the argument \"use_cron_to_relaunch\" 
+to this script (scrfunc_fp):
+  expt_config_fp = \"${expt_config_fp}\"
+  scrfunc_fp = \"${scrfunc_fp}\""
+    fi
   fi
 
   if [ ! -z "${cron_relaunch_intvl_mnts}" ]; then
-    set_bash_param "${expt_config_fp}" "CRON_RELAUNCH_INTVL_MNTS" "${cron_relaunch_intvl_mnts}"
+    CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts}
+  else
+    if [ "${USE_CRON_TO_RELAUNCH^^}" = "TRUE" ] && \
+       [ -z "${CRON_RELAUNCH_INTVL_MNTS}" ]; then
+      print_err_msg_exit "\
+The workflow variable CRON_RELAUNCH_INTVL_MNTS cannot be set to an empty 
+string:
+  CRON_RELAUNCH_INTVL_MNTS = \"${CRON_RELAUNCH_INTVL_MNTS}\"
+Please set this variable to a nonempty value in the experiment configuration 
+file (expt_config_fp), or set it using the argument \"cron_relaunch_intvl_mnts\" 
+to this script (scrfunc_fp):
+  expt_config_fp = \"${expt_config_fp}\"
+  scrfunc_fp = \"${scrfunc_fp}\""
+    fi
   fi
+#
+#-----------------------------------------------------------------------
+#
+# Get the settings of various machine-dependent parameters from the 
+# configuration file.  If any of these are set to an empty string, reset 
+# them to the machine-dependent values specified below.
+#
+#-----------------------------------------------------------------------
+#
+  case "$machine" in
+#
+  "hera")
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"service"}
+    QUEUE_FCST=${QUEUE_FCST:-"batch"}
+    ;;
+#
+  "cheyenne")
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
+    QUEUE_FCST=${QUEUE_FCST:-"regular"}
+    ;;
+#
+  esac
+#
+#-----------------------------------------------------------------------
+#
+# (Re)set parameters in the experiment configuration file.
+#
+#-----------------------------------------------------------------------
+#
+  set_bash_param "${expt_config_fp}" "MACHINE" "${MACHINE}"
+  set_bash_param "${expt_config_fp}" "ACCOUNT" "${ACCOUNT}"
+  set_bash_param "${expt_config_fp}" "EXPT_SUBDIR" "${EXPT_SUBDIR}"
+  set_bash_param "${expt_config_fp}" "USE_CRON_TO_RELAUNCH" "${USE_CRON_TO_RELAUNCH}"
+  set_bash_param "${expt_config_fp}" "CRON_RELAUNCH_INTVL_MNTS" "${CRON_RELAUNCH_INTVL_MNTS}"
+  set_bash_param "${expt_config_fp}" "QUEUE_DEFAULT" "${QUEUE_DEFAULT}"
+  set_bash_param "${expt_config_fp}" "QUEUE_HPSS" "${QUEUE_HPSS}"
+  set_bash_param "${expt_config_fp}" "QUEUE_FCST" "${QUEUE_FCST}"
+#
+#-----------------------------------------------------------------------
+#
+#
+#
+#-----------------------------------------------------------------------
+#
+  case "${expt_name}" in
+#
+  "user_staged_extrn_files_FV3GFS")
+    case "$machine" in
+    "hera")
+      EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+      EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
+      ;;
+    "cheyenne")
+      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
+      ;;
+    esac
+
+    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
+    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
+    ;;
+#
+  "user_staged_extrn_files_GSMGFS")
+
+    case "$machine" in
+    "hera")
+      EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
+      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+      EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
+      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
+      ;;
+    "cheyenne")
+      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
+      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
+      EXTRN_MDL_FILES_LBCS=( "gfs.atmf006.nemsio" )
+      ;;
+    esac
+
+    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
+    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
+    ;;
+#
+  "user_staged_extrn_files_RAPX")
+    case "$machine" in
+    "hera")
+      EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/RAPX"
+      EXTRN_MDL_FILES_ICS=( "rapx.out.for_f000" )
+      EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/RAPX"
+      EXTRN_MDL_FILES_LBCS=( "rapx.out.for_f006" )
+      ;;
+    "cheyenne")
+      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/RAPX"
+      EXTRN_MDL_FILES_ICS=( "rapx.out.for_f000" )
+      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/RAPX"
+      EXTRN_MDL_FILES_LBCS=( "rapx.out.for_f006" )
+      ;;
+    esac
+
+    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
+    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
+    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
+    ;;
+#
+  esac
 #
 #-----------------------------------------------------------------------
 #

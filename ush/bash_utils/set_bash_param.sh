@@ -109,7 +109,11 @@ Setting parameter \"$param\" in file \"$file\" to \"$value\" ..."
 #-----------------------------------------------------------------------
 #
   local regex_search="(^\s*$param=)(\".*\")?([^ \"]*)?(\(.*\))?(\s*[#].*)?"
-  local regex_replace="\1\"$value\"\5"
+  if [ "${value:0:1}" != "(" ] && [ "${value: -1}" != ")" ]; then
+    local regex_replace="\1\"$value\"\5"
+  else
+    local regex_replace="\1$value\5"
+  fi
 #
 #-----------------------------------------------------------------------
 #
