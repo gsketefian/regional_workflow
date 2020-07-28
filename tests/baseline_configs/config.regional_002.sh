@@ -44,12 +44,3 @@ RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
-#
-# If necessary, these will be filled in by the script that runs the WE2E 
-# tests.
-#
-EXTRN_MDL_SOURCE_DIR_ICS=""
-EXTRN_MDL_FILES_ICS=( "" )
-EXTRN_MDL_SOURCE_DIR_LBCS=""
-EXTRN_MDL_FILES_LBCS=( "" )
-
