@@ -385,7 +385,7 @@ fi
 # baseline and the experiment.
 #
   expt_config_fp="$ushdir/config.${expt_name}.sh"
-  cp_vrfy "${baseline_config_fp}" "${expt_config_fp}"
+#  cp_vrfy "${baseline_config_fp}" "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
@@ -394,7 +394,19 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-  . "${expt_config_fp}"
+#  . "${expt_config_fp}"
+#
+#-----------------------------------------------------------------------
+#
+# Common portion of error messages that may get printed below.
+#
+#-----------------------------------------------------------------------
+#
+  msg_common="
+The experiment/test name (expt_name) and the location of the workflow 
+configuration file (expt_config_fp) are:
+  expt_name = \"${expt_name}\"
+  expt_config_fp = \"${expt_config_fp}\""
 #
 #-----------------------------------------------------------------------
 #
@@ -449,52 +461,47 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-  MACHINE=${MACHINE:-$machine}
-  ACCOUNT=${ACCOUNT:-$account}
-  EXPT_SUBDIR=${EXPT_SUBDIR:-${expt_subdir}}
+#  MACHINE=${MACHINE:-$machine}
+#  ACCOUNT=${ACCOUNT:-$account}
+#  EXPT_SUBDIR=${EXPT_SUBDIR:-${expt_subdir}}
 #
 #-----------------------------------------------------------------------
 #
-# If the optional arguments "use_cron_to_relaunch" and "cron_relaunch_intvl_mnts"
-# to this script have been specified (i.e. not emtpy), set the workflow
-# variables USE_CRON_TO_RELAUNCH and CRON_RELAUNCH_INTVL_MNTS to these 
-# values.  If not, ensure that the latter two have been specified (i.e.
-# set to non-empty values) in the experiment configuration file.
+# Add a section to the workflow configuration file that sets the machine,
+# account to which to charge computational resources, and the name of the
+# experiment subdirectory (which here is the name of the WE2E tests).
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${use_cron_to_relaunch}" ]; then
-    USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch}
-  else
-    if [ -z "${USE_CRON_TO_RELAUNCH}" ]; then
-      print_err_msg_exit "\
-The workflow variable USE_CRON_TO_RELAUNCH cannot be set to an empty 
-string:
-  USE_CRON_TO_RELAUNCH = \"${USE_CRON_TO_RELAUNCH}\"
-Please set this variable to a nonempty value in the experiment configuration 
-file (expt_config_fp), or set it using the argument \"use_cron_to_relaunch\" 
-to this script (scrfunc_fp):
-  expt_config_fp = \"${expt_config_fp}\"
-  scrfunc_fp = \"${scrfunc_fp}\""
-    fi
-  fi
+  { cat << EOM >> ${expt_config_fp}
+#
+# The machine on which to run, the account to which to charge computational
+# resources, and the name of the experiment subdirectory.
+#
+MACHINE="${machine}"
+ACCOUNT="${account}"
+EXPT_SUBDIR="${expt_subdir}"
+EOM
+  } || print_err_msg_exit "\
+Heredoc (cat) command to write to the workflow configuration file the 
+name of the machine on which to run, the account to which to charge 
+computational resources, and the name of the experiment subdirectory 
+failed.
+${msg_common}"
+#
+#-----------------------------------------------------------------------
+#
+# (Re)set parameters in the experiment configuration file.
+#
+#-----------------------------------------------------------------------
+#
+#  set_bash_param "${expt_config_fp}" "MACHINE" "${MACHINE}"
+#  set_bash_param "${expt_config_fp}" "ACCOUNT" "${ACCOUNT}"
+#  set_bash_param "${expt_config_fp}" "EXPT_SUBDIR" "${EXPT_SUBDIR}"
+#  set_bash_param "${expt_config_fp}" "USE_CRON_TO_RELAUNCH" "${USE_CRON_TO_RELAUNCH}"
+#  set_bash_param "${expt_config_fp}" "CRON_RELAUNCH_INTVL_MNTS" "${CRON_RELAUNCH_INTVL_MNTS}"
 
-  if [ ! -z "${cron_relaunch_intvl_mnts}" ]; then
-    CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts}
-  else
-    if [ "${USE_CRON_TO_RELAUNCH^^}" = "TRUE" ] && \
-       [ -z "${CRON_RELAUNCH_INTVL_MNTS}" ]; then
-      print_err_msg_exit "\
-The workflow variable CRON_RELAUNCH_INTVL_MNTS cannot be set to an empty 
-string:
-  CRON_RELAUNCH_INTVL_MNTS = \"${CRON_RELAUNCH_INTVL_MNTS}\"
-Please set this variable to a nonempty value in the experiment configuration 
-file (expt_config_fp), or set it using the argument \"cron_relaunch_intvl_mnts\" 
-to this script (scrfunc_fp):
-  expt_config_fp = \"${expt_config_fp}\"
-  scrfunc_fp = \"${scrfunc_fp}\""
-    fi
-  fi
+
 #
 #-----------------------------------------------------------------------
 #
@@ -507,37 +514,165 @@ to this script (scrfunc_fp):
   case "$machine" in
 #
   "hera")
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"service"}
-    QUEUE_FCST=${QUEUE_FCST:-"batch"}
+    QUEUE_DEFAULT="batch"
+    QUEUE_HPSS="service"
+    QUEUE_FCST="batch"
     ;;
 #
   "cheyenne")
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
-    QUEUE_FCST=${QUEUE_FCST:-"regular"}
+    QUEUE_DEFAULT="regular"
+    QUEUE_HPSS="regular"
+    QUEUE_FCST="regular"
     ;;
 #
   esac
 #
+# Add a section to the workflow configuration file that sets the names of
+# the queues to which to submit the various workflow tasks.
+#
+  { cat << EOM >> ${expt_config_fp}
+#
+# Names of queues to which to submit workflow tasks.
+#
+QUEUE_DEFAULT="${QUEUE_DEFAULT}"
+QUEUE_HPSS="${QUEUE_HPSS}"
+QUEUE_FCST="${QUEUE_FCST}"
+EOM
+  } || print_err_msg_exit "\
+Heredoc (cat) command to write to the workflow configuration file the 
+names of the queues to which to submit the various workflow tasks failed.
+${msg_common}"
+#
 #-----------------------------------------------------------------------
 #
-# (Re)set parameters in the experiment configuration file.
+# If the optional arguments "use_cron_to_relaunch" and "cron_relaunch_intvl_mnts"
+# to this script have been specified (i.e. not emtpy), set the workflow
+# variables USE_CRON_TO_RELAUNCH and CRON_RELAUNCH_INTVL_MNTS to these 
+# values.  If not, ensure that the latter two have been specified (i.e.
+# set to non-empty values) in the experiment configuration file.
 #
 #-----------------------------------------------------------------------
 #
-  set_bash_param "${expt_config_fp}" "MACHINE" "${MACHINE}"
-  set_bash_param "${expt_config_fp}" "ACCOUNT" "${ACCOUNT}"
-  set_bash_param "${expt_config_fp}" "EXPT_SUBDIR" "${EXPT_SUBDIR}"
-  set_bash_param "${expt_config_fp}" "USE_CRON_TO_RELAUNCH" "${USE_CRON_TO_RELAUNCH}"
-  set_bash_param "${expt_config_fp}" "CRON_RELAUNCH_INTVL_MNTS" "${CRON_RELAUNCH_INTVL_MNTS}"
-  set_bash_param "${expt_config_fp}" "QUEUE_DEFAULT" "${QUEUE_DEFAULT}"
-  set_bash_param "${expt_config_fp}" "QUEUE_HPSS" "${QUEUE_HPSS}"
-  set_bash_param "${expt_config_fp}" "QUEUE_FCST" "${QUEUE_FCST}"
+  USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
+#  if [ ! -z "${use_cron_to_relaunch}" ]; then
+#    USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch}
+#  else
+#    if [ -z "${USE_CRON_TO_RELAUNCH}" ]; then
+#      print_err_msg_exit "\
+#The workflow variable USE_CRON_TO_RELAUNCH cannot be set to an empty 
+#string:
+#  USE_CRON_TO_RELAUNCH = \"${USE_CRON_TO_RELAUNCH}\"
+#Please set this variable to a nonempty value in the experiment configuration 
+#file (expt_config_fp), or set it using the argument \"use_cron_to_relaunch\" 
+#to this script (scrfunc_fp):
+#  expt_config_fp = \"${expt_config_fp}\"
+#  scrfunc_fp = \"${scrfunc_fp}\""
+#    fi
+#  fi
+
+  CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts:-"02"}
+#  if [ ! -z "${cron_relaunch_intvl_mnts}" ]; then
+#    CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts}
+#  else
+#    if [ "${USE_CRON_TO_RELAUNCH^^}" = "TRUE" ] && \
+#       [ -z "${CRON_RELAUNCH_INTVL_MNTS}" ]; then
+#      print_err_msg_exit "\
+#The workflow variable CRON_RELAUNCH_INTVL_MNTS cannot be set to an empty 
+#string:
+#  CRON_RELAUNCH_INTVL_MNTS = \"${CRON_RELAUNCH_INTVL_MNTS}\"
+#Please set this variable to a nonempty value in the experiment configuration 
+#file (expt_config_fp), or set it using the argument \"cron_relaunch_intvl_mnts\" 
+#to this script (scrfunc_fp):
+#  expt_config_fp = \"${expt_config_fp}\"
+#  scrfunc_fp = \"${scrfunc_fp}\""
+#    fi
+#  fi
+
+  if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
+
+    { cat << EOM >> ${expt_config_fp}
+#
+# Whether or not to (re)launch workflow using a cron job, and, if so, the
+# frequency (in minutes) with which to relaunch.
+#
+USE_CRON_TO_RELAUNCH="${USE_CRON_TO_RELAUNCH}"
+CRON_RELAUNCH_INTVL_MNTS="${CRON_RELAUNCH_INTVL_MNTS}"
+EOM
+    } || print_err_msg_exit "\
+Heredoc (cat) command to write to the workflow configuration file the 
+parameter that specifies whether or not to (re)launch workflow using a 
+cron job, and, if so, the frequency (in minutes) with which to relaunch
+failed.
+${msg_common}"
+
+  fi
 #
 #-----------------------------------------------------------------------
 #
+# Customize parameters that specify whether or not to run the preprocessing
+# tasks and, if not, the locations and names of preexisting grid, orography,
+# and/or surface climatology files.
 #
+#-----------------------------------------------------------------------
+#
+  set_params="FALSE"
+
+  case "${expt_name}" in
+#
+  "regional_006")
+    case "$machine" in
+    "hera")
+      set_params="TRUE"
+      RUN_TASK_MAKE_GRID="FALSE"
+      GRID_DIR="/scratch2/BMC/det/FV3SAR_pregen/grid/GSD_HRRR25km"             
+      RUN_TASK_MAKE_OROG="FALSE"
+      OROG_DIR="/scratch2/BMC/det/FV3SAR_pregen/orog/GSD_HRRR25km"             
+      RUN_TASK_MAKE_SFC_CLIMO="FALSE"
+      SFC_CLIMO_DIR="/scratch2/BMC/det/FV3SAR_pregen/sfc_climo/GSD_HRRR25km"   
+      ;;
+    "cheyenne")
+      set_params="TRUE"
+      RUN_TASK_MAKE_GRID="FALSE"
+      GRID_DIR="/need/to/set"
+      RUN_TASK_MAKE_OROG="FALSE"
+      OROG_DIR="/need/to/set"
+      RUN_TASK_MAKE_SFC_CLIMO="FALSE"
+      SFC_CLIMO_DIR="/need/to/set"
+      ;;
+    esac
+    ;;
+#
+  esac
+#
+# Add a section to the workflow configuration file that sets the parameters
+# that specify the locations and names of user-staged external model files.
+#
+  if [ "${set_params}" = "TRUE" ]; then
+
+    { cat << EOM >> ${expt_config_fp}
+#
+# Locations and names of staged external model files.
+#
+RUN_TASK_MAKE_GRID="${RUN_TASK_MAKE_GRID}"
+GRID_DIR="${GRID_DIR}"
+RUN_TASK_MAKE_OROG="${RUN_TASK_MAKE_OROG}"
+OROG_DIR="${OROG_DIR}"
+RUN_TASK_MAKE_SFC_CLIMO="${RUN_TASK_MAKE_SFC_CLIMO}"
+SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
+EOM
+    } || print_err_msg_exit "\
+Heredoc (cat) command to write to the workflow configuration file the 
+parameters that specify whether or not to run the preprocessing tasks and, 
+if not, the locations and names of preexisting grid, orography, and/or 
+surface climatology files failed.
+${msg_common}"
+
+  fi
+#
+#-----------------------------------------------------------------------
+#
+# Customize parameters that specify the locations and names of staged 
+# external model files.
 #
 #-----------------------------------------------------------------------
 #
@@ -555,13 +690,6 @@ to this script (scrfunc_fp):
       EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
       ;;
     esac
-
-#    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
-#    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
     ;;
 #
   "user_staged_extrn_files_FV3GFS")
@@ -581,17 +709,9 @@ to this script (scrfunc_fp):
       EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
       ;;
     esac
-
-#    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
-#    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
     ;;
 #
   "user_staged_extrn_files_GSMGFS")
-
     case "$machine" in
     "hera")
       set_params="TRUE"
@@ -608,13 +728,6 @@ to this script (scrfunc_fp):
       EXTRN_MDL_FILES_LBCS=( "gfs.atmf006.nemsio" )
       ;;
     esac
-
-#    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
-#    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
     ;;
 #
   "user_staged_extrn_files_RAPX")
@@ -634,17 +747,13 @@ to this script (scrfunc_fp):
       EXTRN_MDL_FILES_LBCS=( "rapx.out.for_f006" )
       ;;
     esac
-
-#    extrn_mdl_files_ics_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")"
-#    extrn_mdl_files_lbcs_str="( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")"
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_ICS" "${EXTRN_MDL_SOURCE_DIR_ICS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_ICS" "${extrn_mdl_files_ics_str}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SOURCE_DIR_LBCS" "${EXTRN_MDL_SOURCE_DIR_LBCS}" 
-#    set_bash_param "${expt_config_fp}" "EXTRN_MDL_FILES_LBCS" "${extrn_mdl_files_lbcs_str}" 
     ;;
 #
   esac
-
+#
+# Add a section to the workflow configuration file that sets the parameters
+# that specify the locations and names of user-staged external model files.
+#
   if [ "${set_params}" = "TRUE" ]; then
 
     { cat << EOM >> ${expt_config_fp}
@@ -652,15 +761,24 @@ to this script (scrfunc_fp):
 # Locations and names of staged external model files.
 #
 EXTRN_MDL_SOURCE_DIR_ICS="${EXTRN_MDL_SOURCE_DIR_ICS}"
-EXTRN_MDL_FILES_ICS=( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" )")
+EXTRN_MDL_FILES_ICS=( $( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" ))
 EXTRN_MDL_SOURCE_DIR_LBCS="${EXTRN_MDL_SOURCE_DIR_LBCS}"
-EXTRN_MDL_FILES_LBCS=( "$( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" )")
+EXTRN_MDL_FILES_LBCS=( $( printf '\"%s\" ' "${EXTRN_MDL_FILES_LBCS[@]}" ))
 EOM
     } || print_err_msg_exit "\
-Heredoc (cat) command to write locations and names of staged external 
-model files failed."
+Heredoc (cat) command to write to the workflow configuration file the 
+locations and names of user-staged external model files failed.
+${msg_common}"
 
   fi
+#
+#-----------------------------------------------------------------------
+#
+# Append the 
+#
+#-----------------------------------------------------------------------
+#
+  cat "${baseline_config_fp}" >> "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
