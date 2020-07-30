@@ -40,6 +40,9 @@ baseline_configs_dir="$homerrfs/tests/baseline_configs"
 #-----------------------------------------------------------------------
 #
 . $ushdir/source_util_funcs.sh
+
+
+. ./get_WE2E_test_staged_extrn_mdl_dir_file_info.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -390,11 +393,11 @@ fi
 #-----------------------------------------------------------------------
 #
 # Source the experiment configuration file to obtain user-specified 
-# workflow variables.
+# workflow variables.  Some of these will be needed below.
 #
 #-----------------------------------------------------------------------
 #
-#  . "${expt_config_fp}"
+  . "${baseline_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
@@ -671,6 +674,15 @@ ${msg_common}"
 #
 #-----------------------------------------------------------------------
 #
+# Append the 
+#
+#-----------------------------------------------------------------------
+#
+  printf "\n" >> "${expt_config_fp}"
+  cat "${baseline_config_fp}" >> "${expt_config_fp}"
+#
+#-----------------------------------------------------------------------
+#
 # Customize parameters that specify the locations and names of staged 
 # external model files.
 #
@@ -678,75 +690,47 @@ ${msg_common}"
 #
   set_params="FALSE"
 
-  case "${expt_name}" in
+#  tests_list_hpss=( \
+#    "GSD_RAP13km" \
+#    "community_ensemble_008mems" \
+#    "community_ensemble_2mems" \
+#    "nco_conus" \
+#    "nco_conus_c96" \
+#    "nco_conus_ensemble" \
+#    "new_JPgrid" \
+#    "regional_001" \
+#    "regional_002" \
+#    "regional_003" \
+#    "regional_004" \
+#    "regional_005" \
+#    "regional_006" \
+#    "regional_007" \
+#    "regional_008" \
+#    "regional_009" \
+#    "regional_010" \
+#    "regional_011" \
+#    "regional_012" \
+#    "regional_013" \
+#    "regional_014" \
+#    "regional_015" \
+#    "regional_016" \
+#  )
+
+  tests_list_staged_extrn_mdl_files=( \
+    "user_staged_extrn_files_FV3GFS" \
+    "user_staged_extrn_files_GSMGFS" \
+    "user_staged_extrn_files_RAPX" \
+  )
+
+  case "$machine" in
 #
-  "regional_002")
-    case "$machine" in
-    "cheyenne")
-      set_params="TRUE"
-      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
-      ;;
-    esac
+  "cheyenne")
+    set_params="TRUE"
     ;;
 #
-  "user_staged_extrn_files_FV3GFS")
-    case "$machine" in
-    "hera")
-      set_params="TRUE"
-      EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-      EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
-      ;;
-    "cheyenne")
-      set_params="TRUE"
-      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-      EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
-      ;;
-    esac
-    ;;
-#
-  "user_staged_extrn_files_GSMGFS")
-    case "$machine" in
-    "hera")
-      set_params="TRUE"
-      EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
-      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-      EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
-      EXTRN_MDL_FILES_LBCS=( "gfs.atmf006.nemsio" )
-      ;;
-    "cheyenne")
-      set_params="TRUE"
-      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
-      EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/GSMGFS"
-      EXTRN_MDL_FILES_LBCS=( "gfs.atmf006.nemsio" )
-      ;;
-    esac
-    ;;
-#
-  "user_staged_extrn_files_RAPX")
-    case "$machine" in
-    "hera")
-      set_params="TRUE"
-      EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/RAPX"
-      EXTRN_MDL_FILES_ICS=( "rapx.out.for_f000" )
-      EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/RAPX"
-      EXTRN_MDL_FILES_LBCS=( "rapx.out.for_f006" )
-      ;;
-    "cheyenne")
-      set_params="TRUE"
-      EXTRN_MDL_SOURCE_DIR_ICS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/RAPX"
-      EXTRN_MDL_FILES_ICS=( "rapx.out.for_f000" )
-      EXTRN_MDL_SOURCE_DIR_LBCS="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files/RAPX"
-      EXTRN_MDL_FILES_LBCS=( "rapx.out.for_f006" )
-      ;;
-    esac
+  "hera")
+#is_element_of "valid_var_values" "${var_value}"
+    is_element_of "tests_list_staged_extrn_mdl_files" "${expt_name}" && set_params="TRUE"
     ;;
 #
   esac
@@ -755,6 +739,17 @@ ${msg_common}"
 # that specify the locations and names of user-staged external model files.
 #
   if [ "${set_params}" = "TRUE" ]; then
+
+    get_WE2E_test_staged_extrn_mdl_dir_file_info \
+      machine="$machine" \
+      extrn_mdl_name_ics="${EXTRN_MDL_NAME_ICS}" \
+      extrn_mdl_name_lbcs="${EXTRN_MDL_NAME_LBCS}" \
+      lbc_spec_intvl_hrs="${LBC_SPEC_INTVL_HRS}" \
+      fcst_len_hrs="${FCST_LEN_HRS}" \
+      output_varname_extrn_mdl_source_dir_ics="EXTRN_MDL_SOURCE_DIR_ICS" \
+      output_varname_extrn_mdl_files_ics="EXTRN_MDL_FILES_ICS" \
+      output_varname_extrn_mdl_source_dir_lbcs="EXTRN_MDL_SOURCE_DIR_LBCS" \
+      output_varname_extrn_mdl_files_lbcs="EXTRN_MDL_FILES_LBCS"
 
     { cat << EOM >> ${expt_config_fp}
 #
@@ -771,14 +766,6 @@ locations and names of user-staged external model files failed.
 ${msg_common}"
 
   fi
-#
-#-----------------------------------------------------------------------
-#
-# Append the 
-#
-#-----------------------------------------------------------------------
-#
-  cat "${baseline_config_fp}" >> "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
