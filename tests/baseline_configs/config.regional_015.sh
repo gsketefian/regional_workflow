@@ -5,12 +5,25 @@ PREEXISTING_DIR_METHOD="rename"
 
 GRID_GEN_METHOD="GFDLgrid"
 
+QUILTING="TRUE"
+USE_CCPP="TRUE"
+CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
+FCST_LEN_HRS="06"
+LBC_SPEC_INTVL_HRS="3"
+
+DATE_FIRST_CYCL="20190701"
+DATE_LAST_CYCL="20190701"
+CYCL_HRS=( "00" )
+
+EXTRN_MDL_NAME_ICS="FV3GFS"
+EXTRN_MDL_NAME_LBCS="FV3GFS"
+
 GFDLgrid_LON_T6_CTR=-97.5
 GFDLgrid_LAT_T6_CTR=38.5
 GFDLgrid_STRETCH_FAC=1.0001  # Cannot be exactly 1.0 because then FV3 thinnks it's a global grid.  This needs to be fixed in the ufs_weather_model repo.
 GFDLgrid_RES="96"
 GFDLgrid_REFINE_RATIO=2
-  
+
 #num_margin_cells_T6_left=9
 #GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
 GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G="10"
@@ -37,8 +50,6 @@ LAYOUT_X="6"
 LAYOUT_Y="6"
 BLOCKSIZE="26"
 
-QUILTING="TRUE"
-
 if [ "$QUILTING" = "TRUE" ]; then
   WRTCMP_write_groups="1"
   WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
@@ -53,16 +64,3 @@ if [ "$QUILTING" = "TRUE" ]; then
   WRTCMP_dlon="0.24"
   WRTCMP_dlat="0.24"
 fi
-
-USE_CCPP="TRUE"
-CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
-FCST_LEN_HRS="06"
-LBC_SPEC_INTVL_HRS="3"
-
-DATE_FIRST_CYCL="20190701"
-DATE_LAST_CYCL="20190701"
-CYCL_HRS=( "00" )
-
-EXTRN_MDL_NAME_ICS="FV3GFS"
-EXTRN_MDL_NAME_LBCS="FV3GFS"
-

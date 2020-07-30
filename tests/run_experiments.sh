@@ -69,9 +69,6 @@ valid_args=( \
 "use_cron_to_relaunch" \
 "cron_relaunch_intvl_mnts" \
 )
-#"queue_default" \
-#"queue_hpss" \
-#"queue_fcst" \
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -382,13 +379,14 @@ fi
 #
   expt_subdir="${expt_name}"
 #
+# The following comment needs to be updated.
 # Create a configuration file for the current experiment.  We do this by
 # first copying the baseline configuration file and then modifying the 
 # the values of those variables within it that are different between the
 # baseline and the experiment.
 #
   expt_config_fp="$ushdir/config.${expt_name}.sh"
-#  cp_vrfy "${baseline_config_fp}" "${expt_config_fp}"
+  rm_vrfy -f "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
@@ -413,63 +411,6 @@ configuration file (expt_config_fp) are:
 #
 #-----------------------------------------------------------------------
 #
-# Set any parameters in the experiment configuration file that have been
-# assigned a value in the arguments list to this script (and thus are 
-# not empty).  Any parameters that have not been assigned a value in the
-# arguments list will retain their values in the baseline configuration
-# file if they are specified in that file.  If not, they will take on
-# the default values specified in the default experiment configuration
-# file in the workflow repository (config_defaults.sh).
-#
-#-----------------------------------------------------------------------
-#
-#  if [ ! -z "$machine" ]; then
-#    set_bash_param "${expt_config_fp}" "MACHINE" "$machine"
-#  fi
-#
-#  if [ ! -z "$account" ]; then
-#    set_bash_param "${expt_config_fp}" "ACCOUNT" "$account"
-#  fi
-#
-#  if [ ! -z "${queue_default}" ]; then
-#    set_bash_param "${expt_config_fp}" "QUEUE_DEFAULT" "${queue_default}"
-#  fi
-#
-#  if [ ! -z "${queue_hpss}" ]; then
-#    set_bash_param "${expt_config_fp}" "QUEUE_HPSS" "${queue_hpss}"
-#  fi
-#
-#  if [ ! -z "${queue_fcst}" ]; then
-#    set_bash_param "${expt_config_fp}" "QUEUE_FCST" "${queue_fcst}"
-#  fi
-
-#  if [ ! -z "${use_cron_to_relaunch}" ]; then
-#    set_bash_param "${expt_config_fp}" "USE_CRON_TO_RELAUNCH" "${use_cron_to_relaunch}"
-#  fi
-#
-#  if [ ! -z "${cron_relaunch_intvl_mnts}" ]; then
-#    set_bash_param "${expt_config_fp}" "CRON_RELAUNCH_INTVL_MNTS" "${cron_relaunch_intvl_mnts}"
-#  fi
-#
-#-----------------------------------------------------------------------
-#
-# If MACHINE, ACCOUNT, and EXPT_SUBDIR are not set in the experiment
-# configuration file, set them to the corresponding local variables (in 
-# lowercase) set above.
-# 
-# Note that the arguments "machine" and "account" to this script get 
-# checked (above) to ensure that they have been specified (i.e. not 
-# empty).  Also, the local variable "expt_subdir" will always have a 
-# valid, non-empty value.
-#
-#-----------------------------------------------------------------------
-#
-#  MACHINE=${MACHINE:-$machine}
-#  ACCOUNT=${ACCOUNT:-$account}
-#  EXPT_SUBDIR=${EXPT_SUBDIR:-${expt_subdir}}
-#
-#-----------------------------------------------------------------------
-#
 # Add a section to the workflow configuration file that sets the machine,
 # account to which to charge computational resources, and the name of the
 # experiment subdirectory (which here is the name of the WE2E tests).
@@ -478,8 +419,12 @@ configuration file (expt_config_fp) are:
 #
   { cat << EOM >> ${expt_config_fp}
 #
+#-----------------------------------------------------------------------
+#
 # The machine on which to run, the account to which to charge computational
 # resources, and the name of the experiment subdirectory.
+#
+#-----------------------------------------------------------------------
 #
 MACHINE="${machine}"
 ACCOUNT="${account}"
@@ -491,20 +436,6 @@ name of the machine on which to run, the account to which to charge
 computational resources, and the name of the experiment subdirectory 
 failed.
 ${msg_common}"
-#
-#-----------------------------------------------------------------------
-#
-# (Re)set parameters in the experiment configuration file.
-#
-#-----------------------------------------------------------------------
-#
-#  set_bash_param "${expt_config_fp}" "MACHINE" "${MACHINE}"
-#  set_bash_param "${expt_config_fp}" "ACCOUNT" "${ACCOUNT}"
-#  set_bash_param "${expt_config_fp}" "EXPT_SUBDIR" "${EXPT_SUBDIR}"
-#  set_bash_param "${expt_config_fp}" "USE_CRON_TO_RELAUNCH" "${USE_CRON_TO_RELAUNCH}"
-#  set_bash_param "${expt_config_fp}" "CRON_RELAUNCH_INTVL_MNTS" "${CRON_RELAUNCH_INTVL_MNTS}"
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -535,7 +466,11 @@ ${msg_common}"
 #
   { cat << EOM >> ${expt_config_fp}
 #
+#-----------------------------------------------------------------------
+#
 # Names of queues to which to submit workflow tasks.
+#
+#-----------------------------------------------------------------------
 #
 QUEUE_DEFAULT="${QUEUE_DEFAULT}"
 QUEUE_HPSS="${QUEUE_HPSS}"
@@ -557,46 +492,18 @@ ${msg_common}"
 #-----------------------------------------------------------------------
 #
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
-#  if [ ! -z "${use_cron_to_relaunch}" ]; then
-#    USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch}
-#  else
-#    if [ -z "${USE_CRON_TO_RELAUNCH}" ]; then
-#      print_err_msg_exit "\
-#The workflow variable USE_CRON_TO_RELAUNCH cannot be set to an empty 
-#string:
-#  USE_CRON_TO_RELAUNCH = \"${USE_CRON_TO_RELAUNCH}\"
-#Please set this variable to a nonempty value in the experiment configuration 
-#file (expt_config_fp), or set it using the argument \"use_cron_to_relaunch\" 
-#to this script (scrfunc_fp):
-#  expt_config_fp = \"${expt_config_fp}\"
-#  scrfunc_fp = \"${scrfunc_fp}\""
-#    fi
-#  fi
-
   CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts:-"02"}
-#  if [ ! -z "${cron_relaunch_intvl_mnts}" ]; then
-#    CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts}
-#  else
-#    if [ "${USE_CRON_TO_RELAUNCH^^}" = "TRUE" ] && \
-#       [ -z "${CRON_RELAUNCH_INTVL_MNTS}" ]; then
-#      print_err_msg_exit "\
-#The workflow variable CRON_RELAUNCH_INTVL_MNTS cannot be set to an empty 
-#string:
-#  CRON_RELAUNCH_INTVL_MNTS = \"${CRON_RELAUNCH_INTVL_MNTS}\"
-#Please set this variable to a nonempty value in the experiment configuration 
-#file (expt_config_fp), or set it using the argument \"cron_relaunch_intvl_mnts\" 
-#to this script (scrfunc_fp):
-#  expt_config_fp = \"${expt_config_fp}\"
-#  scrfunc_fp = \"${scrfunc_fp}\""
-#    fi
-#  fi
 
   if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
 
     { cat << EOM >> ${expt_config_fp}
 #
+#-----------------------------------------------------------------------
+#
 # Whether or not to (re)launch workflow using a cron job, and, if so, the
 # frequency (in minutes) with which to relaunch.
+#
+#-----------------------------------------------------------------------
 #
 USE_CRON_TO_RELAUNCH="${USE_CRON_TO_RELAUNCH}"
 CRON_RELAUNCH_INTVL_MNTS="${CRON_RELAUNCH_INTVL_MNTS}"
@@ -609,6 +516,24 @@ failed.
 ${msg_common}"
 
   fi
+#
+#-----------------------------------------------------------------------
+#
+# Append the 
+#
+#-----------------------------------------------------------------------
+#
+  printf "\
+#
+#-----------------------------------------------------------------------
+#
+# The following section is from the base configuration file of this WE2E
+# test.
+#
+#-----------------------------------------------------------------------
+#
+" >> "${expt_config_fp}"
+  cat "${baseline_config_fp}" >> "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
@@ -654,7 +579,11 @@ ${msg_common}"
 
     { cat << EOM >> ${expt_config_fp}
 #
+#-----------------------------------------------------------------------
+#
 # Locations and names of staged external model files.
+#
+#-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="${RUN_TASK_MAKE_GRID}"
 GRID_DIR="${GRID_DIR}"
@@ -674,12 +603,134 @@ ${msg_common}"
 #
 #-----------------------------------------------------------------------
 #
-# Append the 
+# Customize machine-dependent parameters for tests that are in NCO mode
+# (i.e. those for which RUN_ENVIR is set to "nco").
 #
 #-----------------------------------------------------------------------
 #
-  printf "\n" >> "${expt_config_fp}"
-  cat "${baseline_config_fp}" >> "${expt_config_fp}"
+  set_params="FALSE"
+
+  tests_list_nco_mode=( \
+    "nco_conus" \
+    "nco_conus_c96" \
+    "nco_ensemble" \
+    "regional_009" \
+  )
+
+  is_element_of "tests_list_nco_mode" "${expt_name}" && { \
+
+    set_params="TRUE" ;
+
+    nco_basedir="${homerrfs%/*/*}/NCO_dirs"
+    STMP="${nco_basedir}/stmp" ;
+    PTMP="${nco_basedir}/ptmp" ;
+
+    case "$machine" in
+#
+    "cheyenne")
+      COMINgfs="/needs/to/be/set"
+      ;;
+#
+    "hera")
+      COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
+      ;;
+#
+    "jet")
+      COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
+      ;;
+#
+    esac ;
+
+  }
+#
+# Add a section to the workflow configuration file that specifies the 
+# parameters set above.
+#
+  if [ "${set_params}" = "TRUE" ]; then
+
+    { cat << EOM >> ${expt_config_fp}
+#
+#-----------------------------------------------------------------------
+#                                                                        
+# IMPORTANT NOTE:
+# In NCO mode, the user must manually (e.g. after doing the build step)  
+# create the symlink "\${FIXrrfs}/fix_sar" that points to EMC's FIXsar    
+# directory on the machine.  For example, on hera, the symlink's target  
+# needs to be                                                            
+#                                                                        
+#   /scratch2/NCEPDEV/fv3-cam/emc.campara/fix_fv3cam/fix_sar             
+#                                                                        
+# The experiment generation script will then set FIXsar to               
+#                                                                        
+#   FIXsar="\${FIXrrfs}/fix_sar/\${EMC_GRID_NAME}"                         
+#                                                                        
+# where EMC_GRID_NAME has the value set above.                           
+#
+#-----------------------------------------------------------------------
+#                                                                        
+
+#
+#-----------------------------------------------------------------------
+#
+# In order to prevent simultaneous WE2E (Workflow End-to-End) tests that
+# are running in NCO mode and which run the same cycles from interfering
+# with each other, for each cycle, each such test must have a distinct
+# path to the following two directories:
+#
+# 1) The directory in which the cycle-dependent model input files, symlinks
+#    to cycle-independent input files, and raw (i.e. before post-processing)
+#    forecast output files for a given cycle are stored.  The path to this
+#    directory is
+#
+#      \$STMP/tmpnwprd/\$RUN/\$cdate
+#
+#    where cdate is the starting year (yyyy), month (mm), day (dd) and
+#    hour of the cycle in the form yyyymmddhh.
+#
+# 2) The directory in which the output files from the post-processor (UPP)
+#    for a given cycle are stored.  The path to this directory is
+#
+#      \$PTMP/com/\$NET/\$envir/\$RUN.\$yyyymmdd/\$hh
+#
+# Here, we make the first directory listed above unique to a WE2E test
+# by setting RUN to the name of the current test.  This will also make
+# the second directory unique because it also conains the variable RUN
+# in its full path, but if this directory -- or set of directories since
+# it involves a set of cycles and forecast hours -- already exists from
+# a previous run of the same test, then it is much less confusing to the
+# user to first move or delete this set of directories during the workflow
+# generation step and then start the experiment (whether we move or delete
+# depends on the setting of PREEXISTING_DIR_METHOD).  For this purpose,
+# it is most convenient to put this set of directories under an umbrella
+# directory that has the same name as the experiment.  This can be done
+# by setting the variable envir to the name of the current test.  Since
+# as mentiond above we will store this name in RUN, below we simply set
+# envir to the same value as RUN (which is just EXPT_SUBDIR).  Then, for
+# this test, the UPP output will be located in the directory
+#
+#   \$PTMP/com/\$NET/\$RUN/\$RUN.\$yyyymmdd/\$hh
+#
+#-----------------------------------------------------------------------
+#
+RUN="\${EXPT_SUBDIR}"
+envir="\${EXPT_SUBDIR}"
+#
+#-----------------------------------------------------------------------
+#
+# Parameters needed in NCO mode to form various directories.
+#
+#-----------------------------------------------------------------------
+#
+COMINgfs="${COMINgfs}"
+STMP="${STMP}"
+PTMP="${PTMP}"
+EOM
+    } || print_err_msg_exit "\
+Heredoc (cat) command to write to the workflow configuration file the 
+parameters needed in NCO mode to form various directories failed.
+${msg_common}"
+
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -690,36 +741,10 @@ ${msg_common}"
 #
   set_params="FALSE"
 
-#  tests_list_hpss=( \
-#    "GSD_RAP13km" \
-#    "community_ensemble_008mems" \
-#    "community_ensemble_2mems" \
-#    "nco_conus" \
-#    "nco_conus_c96" \
-#    "nco_conus_ensemble" \
-#    "new_JPgrid" \
-#    "regional_001" \
-#    "regional_002" \
-#    "regional_003" \
-#    "regional_004" \
-#    "regional_005" \
-#    "regional_006" \
-#    "regional_007" \
-#    "regional_008" \
-#    "regional_009" \
-#    "regional_010" \
-#    "regional_011" \
-#    "regional_012" \
-#    "regional_013" \
-#    "regional_014" \
-#    "regional_015" \
-#    "regional_016" \
-#  )
-
   tests_list_staged_extrn_mdl_files=( \
-    "user_staged_extrn_files_FV3GFS" \
-    "user_staged_extrn_files_GSMGFS" \
-    "user_staged_extrn_files_RAPX" \
+    "user_staged_extrn_mdl_files_FV3GFS" \
+    "user_staged_extrn_mdl_files_GSMGFS" \
+    "user_staged_extrn_mdl_files_RAPX" \
   )
 
   case "$machine" in
@@ -729,7 +754,6 @@ ${msg_common}"
     ;;
 #
   "hera")
-#is_element_of "valid_var_values" "${var_value}"
     is_element_of "tests_list_staged_extrn_mdl_files" "${expt_name}" && set_params="TRUE"
     ;;
 #
