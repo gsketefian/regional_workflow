@@ -155,10 +155,6 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
   *)
     extrn_mdl_files_lbcs=( "" )
   esac
-
-echo
-echo ${extrn_mdl_files_ics[@]}
-echo ${extrn_mdl_files_lbcs[@]}
 #
 #-----------------------------------------------------------------------
 #

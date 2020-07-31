@@ -379,6 +379,8 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
     geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-SAR/geo_em.d01.nc_HRRRX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+  elif [ "${MACHINE}" = "CHEYENNE" ]; then
+    geogrid_file_input_grid="/glade/p/ral/jntp/UFS_CAM/fix/geo_em.d01.nc_HRRRX"
   fi
 
   replace_vgtyp=False
@@ -418,6 +420,8 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
     geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-SAR/geo_em.d01.nc_RAPX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+  elif [ "${MACHINE}" = "CHEYENNE" ]; then
+    geogrid_file_input_grid="/glade/p/ral/jntp/UFS_CAM/fix/geo_em.d01.nc_RAPX"
   fi
 
   replace_vgtyp=False

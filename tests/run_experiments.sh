@@ -66,6 +66,7 @@ valid_args=( \
 "expts_file" \
 "machine" \
 "account" \
+"expt_basedir" \
 "use_cron_to_relaunch" \
 "cron_relaunch_intvl_mnts" \
 )
@@ -417,17 +418,25 @@ configuration file (expt_config_fp) are:
 #
 #-----------------------------------------------------------------------
 #
+  expt_basedir_setting_or_null=""
+  if [ ! -z "{expt_basedir}" ]; then
+    expt_basedir_setting_or_null="EXPT_BASEDIR=\"${expt_basedir}\""
+  fi
+
   { cat << EOM >> ${expt_config_fp}
 #
 #-----------------------------------------------------------------------
 #
 # The machine on which to run, the account to which to charge computational
-# resources, and the name of the experiment subdirectory.
+# resources, the base directory in which to create the experiment directory
+# (if different from the default location), and the name of the experiment 
+# subdirectory.
 #
 #-----------------------------------------------------------------------
 #
 MACHINE="${machine}"
 ACCOUNT="${account}"
+${expt_basedir_setting_or_null}
 EXPT_SUBDIR="${expt_subdir}"
 EOM
   } || print_err_msg_exit "\
@@ -545,32 +554,63 @@ ${msg_common}"
 #
   set_params="FALSE"
 
-  case "${expt_name}" in
-#
-  "regional_006")
+  tests_list_pregen=( \
+    "regional_006" \
+  )
+
+  is_element_of "tests_list_pregen" "${expt_name}" && { \
+
+    set_params="TRUE" ;
+
     case "$machine" in
-    "hera")
-      set_params="TRUE"
-      RUN_TASK_MAKE_GRID="FALSE"
-      GRID_DIR="/scratch2/BMC/det/FV3SAR_pregen/grid/GSD_HRRR25km"             
-      RUN_TASK_MAKE_OROG="FALSE"
-      OROG_DIR="/scratch2/BMC/det/FV3SAR_pregen/orog/GSD_HRRR25km"             
-      RUN_TASK_MAKE_SFC_CLIMO="FALSE"
-      SFC_CLIMO_DIR="/scratch2/BMC/det/FV3SAR_pregen/sfc_climo/GSD_HRRR25km"   
-      ;;
-    "cheyenne")
-      set_params="TRUE"
-      RUN_TASK_MAKE_GRID="FALSE"
-      GRID_DIR="/need/to/set"
-      RUN_TASK_MAKE_OROG="FALSE"
-      OROG_DIR="/need/to/set"
-      RUN_TASK_MAKE_SFC_CLIMO="FALSE"
-      SFC_CLIMO_DIR="/need/to/set"
-      ;;
-    esac
-    ;;
 #
-  esac
+    "hera")
+      pregen_basedir="/scratch2/BMC/det/FV3SAR_pregen"
+      ;;
+#
+    "cheyenne")
+      pregen_basedir="/glade/p/ral/jntp/UFS_CAM/FV3SAR_pregen"
+      ;;
+#
+    esac ;
+
+    RUN_TASK_MAKE_GRID="FALSE"
+    GRID_DIR="${pregen_basedir}/grid/GSD_HRRR25km"             
+    RUN_TASK_MAKE_OROG="FALSE"
+    OROG_DIR="${pregen_basedir}/orog/GSD_HRRR25km"             
+    RUN_TASK_MAKE_SFC_CLIMO="FALSE"
+    SFC_CLIMO_DIR="${pregen_basedir}/sfc_climo/GSD_HRRR25km"   
+
+  }
+
+
+#  case "${expt_name}" in
+##
+#  "regional_006")
+#    case "$machine" in
+#    "hera")
+#      pregen_basedir="/scratch2/BMC/det/FV3SAR_pregen"
+#      set_params="TRUE"
+#      RUN_TASK_MAKE_GRID="FALSE"
+#      GRID_DIR="${pregen_basedir}/grid/GSD_HRRR25km"             
+#      RUN_TASK_MAKE_OROG="FALSE"
+#      OROG_DIR="${pregen_basedir}/orog/GSD_HRRR25km"             
+#      RUN_TASK_MAKE_SFC_CLIMO="FALSE"
+#      SFC_CLIMO_DIR="${pregen_basedir}/sfc_climo/GSD_HRRR25km"   
+#      ;;
+#    "cheyenne")
+#      set_params="TRUE"
+#      RUN_TASK_MAKE_GRID="FALSE"
+#      GRID_DIR="/need/to/set"
+#      RUN_TASK_MAKE_OROG="FALSE"
+#      OROG_DIR="/need/to/set"
+#      RUN_TASK_MAKE_SFC_CLIMO="FALSE"
+#      SFC_CLIMO_DIR="/need/to/set"
+#      ;;
+#    esac
+#    ;;
+##
+#  esac
 #
 # Add a section to the workflow configuration file that sets the parameters
 # that specify the locations and names of user-staged external model files.
@@ -581,7 +621,9 @@ ${msg_common}"
 #
 #-----------------------------------------------------------------------
 #
-# Locations and names of staged external model files.
+# Flags that specify whether or not to each of the pre-processing tasks 
+# and, if not, the directory(ies) in which to look for pre-existing grid, 
+# orography, and/or surface climatology files.
 #
 #-----------------------------------------------------------------------
 #
@@ -627,16 +669,16 @@ ${msg_common}"
 
     case "$machine" in
 #
-    "cheyenne")
-      COMINgfs="/needs/to/be/set"
-      ;;
-#
     "hera")
       COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
       ;;
 #
     "jet")
       COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
+      ;;
+#
+    "cheyenne")
+      COMINgfs="/needs/to/be/set"
       ;;
 #
     esac ;
@@ -665,6 +707,12 @@ ${msg_common}"
 #   FIXsar="\${FIXrrfs}/fix_sar/\${EMC_GRID_NAME}"                         
 #                                                                        
 # where EMC_GRID_NAME has the value set above.                           
+#
+# FIXam on hera:
+#   /scratch1/NCEPDEV/global/glopara/fix/fix_am
+#
+# FIXam on cheyenne:
+#   /glade/p/ral/jntp/UFS_CAM/fix/fix_am
 #
 #-----------------------------------------------------------------------
 #                                                                        
@@ -749,12 +797,12 @@ ${msg_common}"
 
   case "$machine" in
 #
-  "cheyenne")
-    set_params="TRUE"
-    ;;
-#
   "hera")
     is_element_of "tests_list_staged_extrn_mdl_files" "${expt_name}" && set_params="TRUE"
+    ;;
+#
+  "cheyenne")
+    set_params="TRUE"
     ;;
 #
   esac
@@ -777,7 +825,11 @@ ${msg_common}"
 
     { cat << EOM >> ${expt_config_fp}
 #
+#-----------------------------------------------------------------------
+#
 # Locations and names of staged external model files.
+#
+#-----------------------------------------------------------------------
 #
 EXTRN_MDL_SOURCE_DIR_ICS="${EXTRN_MDL_SOURCE_DIR_ICS}"
 EXTRN_MDL_FILES_ICS=( $( printf '\"%s\" ' "${EXTRN_MDL_FILES_ICS[@]}" ))

@@ -123,7 +123,8 @@ CRON_RELAUNCH_INTVL_MNTS="03"
 # EXPT_BASEDIR:
 # The base directory in which the experiment directory will be created.  
 # If this is not specified or if it is set to an empty string, it will
-# default to ${HOMErrfs}/../expt_dirs.  
+# default to ${SR_WX_APP_TOP_DIR}/../expt_dirs, where SR_WX_APP_TOP_DIR
+# is the top level directory of the UFS short-range weather app.
 #
 # EXPT_SUBDIR:
 # The name that the experiment directory (without the full path) will
