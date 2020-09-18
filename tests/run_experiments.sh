@@ -283,7 +283,8 @@ Processing experiment \"${expts_list[$i]}\" ..."
 # "remainder" contains the modifications that need to be made to the 
 # current baseline to obtain the current experiment.
 #
-  regex_search="^([^\|]*)(\|(.*)|)"
+#  regex_search="^([^\|]*)(\|(.*)|)"
+  regex_search="^([^${field_separator}]*)(${field_separator}(.*)|)"
   baseline_name=$( printf "%s" "${expts_list[$i]}" | \
                    sed -r -n -e "s/${regex_search}/\1/p" )
   remainder=$( printf "%s" "${expts_list[$i]}" | \
@@ -341,26 +342,6 @@ specified baseline (baseline_name) does not exist:
   baseline_config_fp = \"${baseline_config_fp}\"
 Please correct and rerun."
   fi
-#
-# We require that EXPT_SUBDIR in the configuration file for the baseline 
-# be set to the name of the baseline.  Check for this by extracting the
-# value of EXPT_SUBDIR from the baseline configuration file and comparing 
-# it to baseline_name.
-#
-if [ 0 = 1 ]; then
-  regex_search="^[ ]*EXPT_SUBDIR=(\")?([^ =\"]+)(.*)"
-  EXPT_SUBDIR=$( sed -r -n -e "s/${regex_search}/\2/p" \
-                 "${baseline_config_fp}" )
-  if [ "${EXPT_SUBDIR}" != "${baseline_name}" ]; then
-    print_err_msg_exit "\
-The name of the experiment subdirectory (EXPT_SUBDIR) in the configura-
-tion file (baseline_config_fp) for the current baseline does not match
-the name of the baseline (baseline_name):
-  baseline_name = \"${baseline_name}\"
-  baseline_config_fp = \"${baseline_config_fp}\"
-  EXPT_SUBDIR = \"${EXPT_SUBDIR}\""
-  fi
-fi
 #
 # Generate a name for the current experiment.  We start with the name of 
 # the current baseline and modify it to indicate which variables must be
