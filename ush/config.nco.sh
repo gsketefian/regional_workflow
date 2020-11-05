@@ -8,7 +8,6 @@ RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 
 PREDEF_GRID_NAME="CONUS_25km_GFDLgrid"
-GRID_GEN_METHOD="GFDLgrid"
 QUILTING="TRUE"
 
 CCPP_PHYS_SUITE="FV3_GFS_v15p2"
@@ -23,6 +22,7 @@ CYCL_HRS=( "18" )
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
 
+# The following must be modified for different platforms and users.
 RUN="an_experiment"
 COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"     # Path to directory containing files from the external model (FV3GFS).
 STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"  # Path to directory STMP that mostly contains input files.

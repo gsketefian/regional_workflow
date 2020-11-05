@@ -17,6 +17,9 @@ valid_vals_PREDEF_GRID_NAME=( \
 "EMC_HI" \
 "EMC_PR" \
 "EMC_GU" \
+"GSL_HAFSV0.A_25km" \
+"GSL_HAFSV0.A_13km" \
+"GSL_HAFSV0.A_3km" \
 "GSD_HRRR_AK_50km" \
 "GSD_RAP13km" \
 )
@@ -31,8 +34,8 @@ valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_RRFS_v1beta" \
 ) 
 valid_vals_GFDLgrid_RES=("48" "96" "192" "384" "768" "1152" "3072")
-valid_vals_EXTRN_MDL_NAME_ICS=("GSMGFS" "FV3GFS" "RAPX" "HRRRX" "NAM")
-valid_vals_EXTRN_MDL_NAME_LBCS=("GSMGFS" "FV3GFS" "RAPX" "HRRRX" "NAM")
+valid_vals_EXTRN_MDL_NAME_ICS=("GSMGFS" "FV3GFS" "RAP" "HRRR" "NAM")
+valid_vals_EXTRN_MDL_NAME_LBCS=("GSMGFS" "FV3GFS" "RAP" "HRRR" "NAM")
 valid_vals_USE_USER_STAGED_EXTRN_FILES=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_FV3GFS_FILE_FMT_ICS=("nemsio" "grib2")
 valid_vals_FV3GFS_FILE_FMT_LBCS=("nemsio" "grib2")
