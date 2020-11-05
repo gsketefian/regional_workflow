@@ -81,16 +81,19 @@ CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_CONUS_25km_GFDLgrid"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try03/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+expt_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS/PR_release_branch/expt_dirs/try02/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
 CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/suite_FV3_GSD_SAR"
 ;CDATE="2019052000"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_AK_3km"
-;CDATE="2019052000"
+expt_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS/PR_release_branch/expt_dirs/try02/grid_RRFS_CONUS_13km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+CDATE="2019052000"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_AK_13km"
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_AK_13km_old001"
+;expt_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS/PR_release_branch/expt_dirs/try02/grid_RRFS_CONUS_13km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
 ;CDATE="2019052000"
 
 
@@ -136,6 +139,7 @@ RAP_bdy_color = "red"
 
 RAP_dir = "/scratch3/BMC/fim/Gerard.Ketefian/regional_FV3_EMC_visit_20180509"
 RAP_dir = "/scratch1/BMC/gsd-fv3-dev/Gerard.Ketefian/regional_FV3_EMC_visit_20180509"
+RAP_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS" ; This is on Orion.
 ;RAP_grid_fn = "/home/Gerard/fv3_regional/fv3sar_workflow/ush/NCL/plot_grid.ncl"
 ;RAP_grid_fn = "/scratch3/BMC/fim/Gerard.Ketefian/regional_FV3_EMC_visit_20180509/geo_em.d01.RAP.nc"
 RAP_grid_fn = RAP_dir + "/geo_em.d01.RAP.nc"
@@ -641,7 +645,7 @@ halo@bdy_line_thickness = 4.0
 halo@bdy_dash_pattern = 1
 
 wrtcmp = True
-;wrtcmp = False
+wrtcmp = False
 wrtcmp@plot_gridlines = True
 wrtcmp@plot_gridlines = False
 ;wrtcmp@gridline_color = "green"

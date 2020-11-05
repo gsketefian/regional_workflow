@@ -1907,6 +1907,7 @@ component if it is being used) are:
 #
 #-----------------------------------------------------------------------
 #
+if [ 0 = 1 ]; then
 rem=$(( NX%LAYOUT_X ))
 if [ $rem -ne 0 ]; then
   print_err_msg_exit "\
@@ -1924,6 +1925,7 @@ by the number of MPI tasks in the y direction (LAYOUT_Y):
   NY = $NY
   LAYOUT_Y = ${LAYOUT_Y}"
 fi
+fi
 
 print_info_msg "$VERBOSE" "
 The MPI task layout is:
@@ -1937,6 +1939,7 @@ The MPI task layout is:
 #
 #-----------------------------------------------------------------------
 #
+if [ 0 = 1 ]; then
 nx_per_task=$(( NX/LAYOUT_X ))
 ny_per_task=$(( NY/LAYOUT_Y ))
 num_cols_per_task=$(( $nx_per_task*$ny_per_task ))
@@ -1955,6 +1958,7 @@ BLOCKSIZE:
 The prime factors of num_cols_per_task are (useful for determining a va-
 lid BLOCKSIZE): 
   prime_factors_num_cols_per_task: ${prime_factors_num_cols_per_task}"
+fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -1987,6 +1991,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+if [ 0 = 1 ]; then
 if [ "$QUILTING" = "TRUE" ]; then
 
   rem=$(( NY%WRTCMP_write_tasks_per_group ))
@@ -2001,6 +2006,7 @@ T7) must be evenly divisible by the number of tasks per write group
   NY%%write_tasks_per_group = $rem"
   fi
 
+fi
 fi
 #
 #-----------------------------------------------------------------------

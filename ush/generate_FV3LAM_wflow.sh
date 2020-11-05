@@ -544,6 +544,7 @@ cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
 #
 #-----------------------------------------------------------------------
 #
+if [ 0 = 1 ]; then
 exec_fn="NEMS.exe"
 exec_fp="${SR_WX_APP_TOP_DIR}/bin/${exec_fn}"
 #Check for the old build location for fv3 executable
@@ -578,6 +579,7 @@ Copying the FV3-LAM executable (exec_fp) to the executables directory
   exec_fp = \"${exec_fp}\"
   EXECDIR = \"$EXECDIR\""
   cp_vrfy "${exec_fp}" "${FV3_EXEC_FP}"
+fi
 fi
 #
 #-----------------------------------------------------------------------

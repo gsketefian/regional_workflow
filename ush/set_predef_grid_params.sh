@@ -100,8 +100,8 @@ predefined domain:
     ESGgrid_DELX="25000.0"
     ESGgrid_DELY="25000.0"
 
-    ESGgrid_NX=200
-    ESGgrid_NY=112
+    ESGgrid_NX=202
+    ESGgrid_NY=116
 
     ESGgrid_WIDE_HALO_WIDTH=6
 
@@ -154,8 +154,8 @@ predefined domain:
     ESGgrid_DELX="13000.0"
     ESGgrid_DELY="13000.0"
 
-    ESGgrid_NX=384
-    ESGgrid_NY=224
+    ESGgrid_NX=396
+    ESGgrid_NY=232
 
     ESGgrid_WIDE_HALO_WIDTH=6
 
