@@ -418,6 +418,96 @@ case ${PREDEF_GRID_NAME} in
 #
 #-----------------------------------------------------------------------
 #
+# The RRFS North America domain with ~13km cells.
+#
+#-----------------------------------------------------------------------
+#
+"RRFS_NA_13km")
+
+  GRID_GEN_METHOD= "ESGgrid"
+
+  ESGgrid_LON_CTR=-107.5
+  ESGgrid_LAT_CTR=51.5
+
+  ESGgrid_DELX="13000.0"
+  ESGgrid_DELY="13000.0"
+
+  ESGgrid_NX=840
+  ESGgrid_NY=600
+
+  ESGgrid_WIDE_HALO_WIDTH=6
+
+  DT_ATMOS="40"
+
+  LAYOUT_X="10"
+  LAYOUT_Y="8"
+  BLOCKSIZE="30"
+
+  if [ "$QUILTING" = "TRUE" ]; then
+    WRTCMP_write_groups="1"
+    WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
+    WRTCMP_output_grid="lambert_conformal"
+    WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+    WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
+# The following need to be adjusted.
+    WRTCMP_nx="1379"
+    WRTCMP_ny="1003"
+    WRTCMP_lon_lwr_left="-187.89737923"
+    WRTCMP_lat_lwr_left="45.84576053"
+    WRTCMP_dx="${ESGgrid_DELX}"
+    WRTCMP_dy="${ESGgrid_DELY}"
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
+# The RRFS North America domain with ~3km cells.
+#
+#-----------------------------------------------------------------------
+#
+"RRFS_NA_3km")
+
+  GRID_GEN_METHOD= "ESGgrid"
+
+  ESGgrid_LON_CTR=-107.5
+  ESGgrid_LAT_CTR=51.5
+
+  ESGgrid_DELX="3000.0"
+  ESGgrid_DELY="3000.0"
+
+  ESGgrid_NX=3640
+  ESGgrid_NY=2520
+
+  ESGgrid_WIDE_HALO_WIDTH=6
+
+  DT_ATMOS="40"
+
+  LAYOUT_X="20"
+  LAYOUT_Y="30"
+  BLOCKSIZE="13"
+
+  if [ "$QUILTING" = "TRUE" ]; then
+    WRTCMP_write_groups="1"
+    WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
+    WRTCMP_output_grid="lambert_conformal"
+    WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+    WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
+# The following need to be adjusted.
+    WRTCMP_nx="1379"
+    WRTCMP_ny="1003"
+    WRTCMP_lon_lwr_left="-187.89737923"
+    WRTCMP_lat_lwr_left="45.84576053"
+    WRTCMP_dx="${ESGgrid_DELX}"
+    WRTCMP_dy="${ESGgrid_DELY}"
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
 # A CONUS domain of GFDLgrid type with ~25km cells.
 #
 # Note:
