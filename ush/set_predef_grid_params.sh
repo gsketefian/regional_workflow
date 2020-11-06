@@ -166,7 +166,7 @@ predefined domain:
     DT_ATMOS="45"
 
     LAYOUT_X="16"
-    LAYOUT_Y="8"
+    LAYOUT_Y="10"
     BLOCKSIZE="32"
 
     if [ "$QUILTING" = "TRUE" ]; then
