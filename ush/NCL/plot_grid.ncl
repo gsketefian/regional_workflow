@@ -77,19 +77,22 @@ CDATE="2019070100"
 ;CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_CONUS_3km_GFDLgrid"
-;CDATE="2019070100"
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_maximize_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_3km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_CONUS_25km_GFDLgrid"
-expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try03/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
-expt_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS/PR_release_branch/expt_dirs/try02/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
-CDATE="2019070100"
+;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try03/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+;expt_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS/PR_release_branch/expt_dirs/try02/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_maximize_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+;CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/suite_FV3_GSD_SAR"
 ;CDATE="2019052000"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_AK_3km"
-expt_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS/PR_release_branch/expt_dirs/try02/grid_RRFS_CONUS_13km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
-CDATE="2019052000"
+;expt_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS/PR_release_branch/expt_dirs/try02/grid_RRFS_CONUS_13km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_maximize_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+;CDATE="2019052000"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_AK_13km"
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_AK_13km_old001"
@@ -139,7 +142,7 @@ RAP_bdy_color = "red"
 
 RAP_dir = "/scratch3/BMC/fim/Gerard.Ketefian/regional_FV3_EMC_visit_20180509"
 RAP_dir = "/scratch1/BMC/gsd-fv3-dev/Gerard.Ketefian/regional_FV3_EMC_visit_20180509"
-RAP_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS" ; This is on Orion.
+;RAP_dir = "/work/noaa/gsd-fv3-dev/gsketefia/UFS" ; This is on Orion.
 ;RAP_grid_fn = "/home/Gerard/fv3_regional/fv3sar_workflow/ush/NCL/plot_grid.ncl"
 ;RAP_grid_fn = "/scratch3/BMC/fim/Gerard.Ketefian/regional_FV3_EMC_visit_20180509/geo_em.d01.RAP.nc"
 RAP_grid_fn = RAP_dir + "/geo_em.d01.RAP.nc"
@@ -188,7 +191,7 @@ subreg_limits := (/ -135, -60, 20, 55 /) ; HRRR domain if using "cyln" map proje
 ; Zoom in on midpoint of southern edge of CONUS domain.
 ;subreg_limits := (/ -103.5, -93.5, 22.5, 26.5 /) ; 10deg x 4deg
 ;subreg_limits := (/ -100.0, -95.0, 24.0, 26.0 /) ; 5deg x 2deg
-;subreg_limits := (/ -99.5, -97.5, 24, 25 /) ; 2deg x 1deg
+subreg_limits := (/ -99.5, -97.5, 24, 25 /) ; 2deg x 1deg
 ;subreg_limits := (/ -99, -98, 24.15, 24.65 /) ; 1deg x 0.5deg
 
 ; Zoom in on midpoint of eastern edge of CONUS domain.
@@ -197,7 +200,7 @@ subreg_limits := (/ -135, -60, 20, 55 /) ; HRRR domain if using "cyln" map proje
 ; Zoom in on midpoint of northern edge of CONUS domain.
 ;subreg_limits := (/ -103.5, -93.5, 50.2, 54.2 /) ; 10deg x 4deg
 ;subreg_limits := (/ -100.0, -95.0, 51.3, 53.3 /) ; 5deg x 2deg
-;subreg_limits := (/ -99.5, -97.5, 51.9, 52.9 /) ; 2deg x 1deg
+subreg_limits := (/ -99.5, -97.5, 51.9, 52.9 /) ; 2deg x 1deg
 ;subreg_limits := (/ -99, -98, 52.3, 52.8 /) ; 1deg x 0.5deg
 
 ; Zoom in on midpoint of western edge of CONUS domain.
@@ -221,21 +224,21 @@ subreg_limits := (/ -135, -60, 20, 55 /) ; HRRR domain if using "cyln" map proje
 ;subreg_limits := (/ -122.85, -122.83, 21.49, 21.51 /) ; 0.02deg x 0.02deg
 
 ; Zoom in on southeast corner of CONUS domain.
-;subreg_limits := (/ -68, -88, 22, 42 /) ; 20deg x 20deg
-;subreg_limits := (/ -70, -80, 20, 30 /) ; 10deg x 10deg
-;subreg_limits := (/ -71, -76, 21, 26 /) ; 5deg x 5deg
-;subreg_limits := (/ -71.9, -73.9, 21.4, 23.4 /) ; 2deg x 2deg
-;subreg_limits := (/ -72, -73, 21.2, 22.2 /) ; 1deg x 1deg
-;subreg_limits := (/ -72.0, -72.5, 21.45, 21.95 /) ; 0.5deg x 0.5deg
-;subreg_limits := (/ -72.1, -72.2, 21.45, 21.55 /) ; 0.1deg x 0.1deg
-;subreg_limits := (/ -72.15, -72.17, 21.49, 21.51 /) ; 0.02deg x 0.02deg
+;subreg_limits := (/ -88, -68, 18, 38 /) ; 20deg x 20deg
+;subreg_limits := (/ -80, -70, 20, 30 /) ; 10deg x 10deg
+;subreg_limits := (/ -76, -71, 21, 26 /) ; 5deg x 5deg
+;subreg_limits := (/ -73.9, -71.9, 21.0, 23.0 /) ; 2deg x 2deg
+;subreg_limits := (/ -73, -72, 21.2, 22.2 /) ; 1deg x 1deg
+;subreg_limits := (/ -72.5, -72.0, 21.45, 21.95 /) ; 0.5deg x 0.5deg
+;subreg_limits := (/ -72.25, -72.15, 21.45, 21.55 /) ; 0.1deg x 0.1deg
+;subreg_limits := (/ -72.17, -72.15, 21.49, 21.51 /) ; 0.02deg x 0.02deg
 
 ; Zoom in on northeast corner of CONUS domain.
-;subreg_limits := (/ -66, -86, 32, 52 /) ; 20deg x 20deg
-;subreg_limits := (/ -64, -74, 40, 50 /) ; 10deg x 10deg.
-;subreg_limits := (/ -62, -67, 44, 49 /) ; 5deg x 5deg.
-;subreg_limits := (/ -61.5, -63.5, 46.2, 48.2 /) ; 2deg x 2deg.
-;subreg_limits := (/ -61.2, -62.2, 47, 48 /) ; 1deg x 1deg.
+;subreg_limits := (/ -78, -58, 32, 52 /) ; 20deg x 20deg
+;subreg_limits := (/ -70, -60, 40, 50 /) ; 10deg x 10deg.
+;subreg_limits := (/ -65.5, -60.5, 44, 49 /) ; 5deg x 5deg.
+;subreg_limits := (/ -63.0, -61.0, 46.2, 48.2 /) ; 2deg x 2deg.
+;subreg_limits := (/ -62.2, -61.2, 47, 48 /) ; 1deg x 1deg.
 
 
 
