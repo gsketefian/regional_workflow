@@ -535,7 +535,7 @@ cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
 # is newer (or if the target doesn't exist).  This will very likely prevent
 # the situation described above, but it doesn't guarantee that it will
 # never happen (it will still happen if an experiment is running a forecast
-# while the user rebuilts the forecast model and attempts to generate a
+# while the user rebuilds the forecast model and attempts to generate a
 # new experiment.  For this reason, this copy operation should really be
 # performed duirng the build step, not here.
 #
