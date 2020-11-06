@@ -119,10 +119,14 @@ predefined domain:
       WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-      WRTCMP_nx="197"
-      WRTCMP_ny="107"
-      WRTCMP_lon_lwr_left="-121.12455072"
-      WRTCMP_lat_lwr_left="23.89394570"
+#      WRTCMP_nx="197"
+#      WRTCMP_ny="107"
+#      WRTCMP_lon_lwr_left="-121.12455072"
+#      WRTCMP_lat_lwr_left="23.89394570"
+      WRTCMP_nx="199"
+      WRTCMP_ny="111"
+      WRTCMP_lon_lwr_left="-121.23349066"
+      WRTCMP_lat_lwr_left="23.41731593"
       WRTCMP_dx="${ESGgrid_DELX}"
       WRTCMP_dy="${ESGgrid_DELY}"
     fi
@@ -173,10 +177,14 @@ predefined domain:
       WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-      WRTCMP_nx="381"
-      WRTCMP_ny="217"
-      WRTCMP_lon_lwr_left="-121.11782706"
-      WRTCMP_lat_lwr_left="23.18443988"
+#      WRTCMP_nx="381"
+#      WRTCMP_ny="217"
+#      WRTCMP_lon_lwr_left="-121.11782706"
+#      WRTCMP_lat_lwr_left="23.18443988"
+      WRTCMP_nx="393"
+      WRTCMP_ny="225"
+      WRTCMP_lon_lwr_left="-121.70231097"
+      WRTCMP_lat_lwr_left="22.57417972"
       WRTCMP_dx="${ESGgrid_DELX}"
       WRTCMP_dy="${ESGgrid_DELY}"
     fi
@@ -208,8 +216,20 @@ predefined domain:
     ESGgrid_DELX="3000.0"
     ESGgrid_DELY="3000.0"
 
-    ESGgrid_NX=1680
-    ESGgrid_NY=1024
+#    ESGgrid_NX=1680
+#    ESGgrid_NY=1024
+
+#    ESGgrid_NX=1680
+#    ESGgrid_NY=1038
+
+#    ESGgrid_NX=1728
+#    ESGgrid_NY=1038
+
+#    ESGgrid_NX=1744
+#    ESGgrid_NY=1038
+
+    ESGgrid_NX=1748
+    ESGgrid_NY=1038
 
     ESGgrid_WIDE_HALO_WIDTH=6
 
@@ -227,10 +247,14 @@ predefined domain:
       WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-      WRTCMP_nx="1678"
-      WRTCMP_ny="1002"
-      WRTCMP_lon_lwr_left="-121.29805882"
-      WRTCMP_lat_lwr_left="22.26588883"
+#      WRTCMP_nx="1678"
+#      WRTCMP_ny="1002"
+#      WRTCMP_lon_lwr_left="-121.29805882"
+#      WRTCMP_lat_lwr_left="22.26588883"
+      WRTCMP_nx="1746"
+      WRTCMP_ny="1014"
+      WRTCMP_lon_lwr_left="-122.17364391"
+      WRTCMP_lat_lwr_left="21.88588562"
       WRTCMP_dx="${ESGgrid_DELX}"
       WRTCMP_dy="${ESGgrid_DELY}"
     fi
