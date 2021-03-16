@@ -110,19 +110,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# check if all necessary environmental variables are included
-#
-#-----------------------------------------------------------------------
-#
-if [ -n "${fmn}" ] && [ -z "${DT_ATMOS}" ]; then
-  print_err_msg_exit "\
-ERROR: Environmental variable \$fmn is present, so \$dt_atmos is also required
-to be set (use same value as in FV3 namelist). This is needed so that
-UPP will process the correct file for the first output timestep model fields."
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Call the ex-script for this J-job and pass to it the necessary varia-
 # bles.
 #
