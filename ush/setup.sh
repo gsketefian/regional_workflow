@@ -232,6 +232,27 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_RUN_POST is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value \
+  "RUN_TASK_RUN_POST" "valid_vals_RUN_TASK_RUN_POST"
+#
+# Set RUN_TASK_RUN_POST to either "TRUE" or "FALSE" so we don't
+# have to consider other valid values later on.
+#
+RUN_TASK_RUN_POST=${RUN_TASK_RUN_POST^^}
+if [ "${RUN_TASK_RUN_POST}" = "TRUE" ] || \
+   [ "${RUN_TASK_RUN_POST}" = "YES" ]; then
+  RUN_TASK_RUN_POST="TRUE"
+elif [ "${RUN_TASK_RUN_POST}" = "FALSE" ] || \
+     [ "${RUN_TASK_RUN_POST}" = "NO" ]; then
+  RUN_TASK_RUN_POST="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that RUN_TASK_VX_GRIDSTAT is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -615,6 +636,42 @@ check_var_valid_value \
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that FCST_MODEL is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "FCST_MODEL" "valid_vals_FCST_MODEL"
+#
+#-----------------------------------------------------------------------
+#
+# Set CPL to TRUE/FALSE based on FCST_MODEL.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
+  CPL="FALSE"
+elif [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  CPL="TRUE"
+else
+  print_err_msg_exit "\ 
+The coupling flag CPL has not been specified for this value of FCST_MODEL:
+  FCST_MODEL = \"${FCST_MODEL}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure RESTART_INTERVAL is set to an integer value if present
+#
+#-----------------------------------------------------------------------
+#
+if ! [[ "${RESTART_INTERVAL}" =~ ^[0-9]+$ ]]; then
+  print_err_msg_exit "\
+RESTART_INTERVAL must be set to an integer number of hours.
+  RESTART_INTERVAL = \"${RESTART_INTERVAL}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Check that DATE_FIRST_CYCL and DATE_LAST_CYCL are strings consisting 
 # of exactly 8 digits.
 #
@@ -752,7 +809,6 @@ SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
 EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
-FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
@@ -846,7 +902,7 @@ property_name="local_path"
 #
 # Get the base directory of the FV3 forecast model code.
 #
-external_name="ufs_weather_model"
+external_name="${FCST_MODEL}"
 UFS_WTHR_MDL_DIR=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
@@ -1158,91 +1214,6 @@ must set DT_SUBHOURLY_POST_MNTS to something other than zero."
 #
   if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
     check_var_valid_value "DT_SUBHOURLY_POST_MNTS" "valid_vals_DT_SUBHOURLY_POST_MNTS"
-  fi
-
-fi
-#
-#-----------------------------------------------------------------------
-#
-# If using the FV3_HRRR physics suite, make sure that the directory from 
-# which certain fixed orography files will be copied to the experiment 
-# directory actually exists.  Note that this is temporary code.  It should
-# be removed once there is a script or code available that will create 
-# these orography files for any grid.
-#
-#-----------------------------------------------------------------------
-#
-GWD_HRRRsuite_DIR=""
-if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-#
-# If in NCO mode, make sure that GWD_HRRRsuite_BASEDIR is set equal to  
-# FIXLAM_NCO_BASEDIR
-#
-  if [ "${RUN_ENVIR}" = "nco" ]; then
-
-    if [ "${GWD_HRRRsuite_BASEDIR}" != "${FIXLAM_NCO_BASEDIR}" ]; then
-
-      gwd_hrrrsuite_basedir_orig="${GWD_HRRRsuite_BASEDIR}"
-      GWD_HRRRsuite_BASEDIR="${FIXLAM_NCO_BASEDIR}"
-
-      if [ ! -z "${gwd_hrrrsuite_basedir_orig}" ]; then
-        print_err_msg_exit "
-When RUN_ENVIR is set to \"nco\", the workflow assumes that the base 
-directory (GWD_HRRRsuite_BASEDIR) under which the grid-specific 
-subdirectories containing the gravity wave drag-related orography 
-statistics files for the FV3_HRRR suite are located is the same as the 
-base directory (FIXLAM_NCO_BASEDIR) under which the other fixed files 
-are located.  Currently, this is not the case:
-  GWD_HRRRsuite_BASEDIR = \"${gwd_hrrrsuite_basedir_orig}\"
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
-Resetting GWD_HRRRsuite_BASEDIR to FIXLAM_NCO_BASEDIR.  Reset value is:
-  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\""
-      fi
-
-    fi
-
-  fi
-#
-# Check that GWD_HRRRsuite_BASEDIR exists and is a directory.
-#
-  if [ ! -d "${GWD_HRRRsuite_BASEDIR}" ]; then
-    print_err_msg_exit "\
-The base directory (GWD_HRRRsuite_BASEDIR) under which the grid-specific
-subdirectories containing the gravity wave drag-related orography files 
-for the FV3_HRRR suite should be located does not exist (or is not a 
-directory):
-  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\""
-  fi
-  GWD_HRRRsuite_DIR="${GWD_HRRRsuite_BASEDIR}/${PREDEF_GRID_NAME}"
-#
-# Ensure that PREDEF_GRID_NAME is not set to a null string.  Currently,
-# only predefined grids can be used with the FV3_HRRR suite because 
-# orography statistics files required by this suite are available only
-# for (some of) the predefined grids.
-#
-  if [ -z "${PREDEF_GRID_NAME}" ]; then
-    print_err_msg_exit "\
-A predefined grid name (PREDEF_GRID_NAME) must be specified when using 
-the FV3_HRRR physics suite:
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
-  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\""
-  else        
-#
-# Ensure that the directory GWD_HRRRsuite_DIR in which the orography
-# statistics files required by the FV3_HRRR suite are located actually
-# exists.
-#
-    if [ ! -d "${GWD_HRRRsuite_DIR}" ]; then
-      print_err_msg_exit "\
-The directory (GWD_HRRRsuite_DIR) that should contain the gravity wave 
-drag-related orography files for the FV3_HRRR suite does not exist:
-  GWD_HRRRsuite_DIR = \"${GWD_HRRRsuite_DIR}\""
-    elif [ ! "$( ls -A ${GWD_HRRRsuite_DIR} )" ]; then
-      print_err_msg_exit "\
-The directory (GWD_HRRRsuite_DIR) that should contain the gravity wave 
-drag related orography files for the FV3_HRRR suite is empty:
-  GWD_HRRRsuite_DIR = \"${GWD_HRRRsuite_DIR}\""
-    fi      
   fi
 
 fi
@@ -1924,21 +1895,6 @@ fi
 #
 . ./set_extrn_mdl_params.sh
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -2047,7 +2003,6 @@ fi
 #-----------------------------------------------------------------------
 #
 mkdir_vrfy -p "$EXPTDIR"
-
 
 #
 #-----------------------------------------------------------------------
@@ -2163,11 +2118,30 @@ CRES=""
 if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
   CRES="C${RES_IN_FIXLAM_FILENAMES}"
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that WRITE_DOPOST is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
+#
+# Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+WRITE_DOPOST=${WRITE_DOPOST^^}
+if [ "$WRITE_DOPOST" = "TRUE" ] || \
+   [ "$WRITE_DOPOST" = "YES" ]; then
+  WRITE_DOPOST="TRUE"
 
+# Turn off run_post
+  RUN_TASK_RUN_POST="FALSE"
 
-
-
-
+elif [ "$WRITE_DOPOST" = "FALSE" ] || \
+     [ "$WRITE_DOPOST" = "NO" ]; then
+  WRITE_DOPOST="FALSE"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -2440,12 +2414,6 @@ str_to_insert=${str_to_insert//$'\n'/\\n}
 #
 regexp="(^#!.*)"
 sed -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
-
-
-
-
-
-
 #
 # Loop through the lines in line_list.
 #
@@ -2631,7 +2599,6 @@ SRC_DIR="$SRC_DIR"
 PARMDIR="$PARMDIR"
 MODULES_DIR="${MODULES_DIR}"
 EXECDIR="$EXECDIR"
-FIXrrfs="$FIXrrfs"
 FIXam="$FIXam"
 FIXLAM="$FIXLAM"
 FIXgsm="$FIXgsm"
@@ -2653,7 +2620,6 @@ CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
-GWD_HRRRsuite_DIR="${GWD_HRRRsuite_DIR}"
 
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
@@ -2808,6 +2774,14 @@ fi
 #-----------------------------------------------------------------------
 #
 { cat << EOM >> ${GLOBAL_VAR_DEFNS_FP}
+#
+#-----------------------------------------------------------------------
+#
+# CPL: parameter for coupling in model_configure
+#
+#-----------------------------------------------------------------------
+#
+CPL="${CPL}"
 #
 #-----------------------------------------------------------------------
 #

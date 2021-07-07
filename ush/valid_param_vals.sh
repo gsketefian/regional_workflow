@@ -2,6 +2,7 @@ valid_vals_RUN_ENVIR=("nco" "community")
 valid_vals_VERBOSE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_MACHINE=("WCOSS_CRAY" "WCOSS_DELL_P3" "HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE")
 valid_vals_SCHED=("slurm" "pbspro" "lsf" "lsfcray" "none")
+valid_vals_FCST_MODEL=("ufs-weather-model" "fv3gfs_aqm")
 valid_vals_PREDEF_GRID_NAME=( \
 "RRFS_CONUS_25km" \
 "RRFS_CONUS_13km" \
@@ -20,6 +21,7 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSL_HAFSV0.A_3km" \
 "GSD_HRRR_AK_50km" \
 "RRFS_NA_13km" \
+"RRFS_NA_3km" \
 )
 valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_CPT_v0" \
@@ -28,7 +30,7 @@ valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_GSD_SAR" \
 "FV3_GSD_v0" \
 "FV3_GFS_v15p2" \
-"FV3_GFS_v16beta" \
+"FV3_GFS_v16" \
 "FV3_RRFS_v1beta" \
 "FV3_RRFS_v1alpha" \
 "FV3_HRRR" \
@@ -46,8 +48,10 @@ valid_vals_WRTCMP_output_grid=("rotated_latlon" "lambert_conformal" "regional_la
 valid_vals_RUN_TASK_MAKE_GRID=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_MAKE_OROG=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_MAKE_SFC_CLIMO=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_RUN_TASK_RUN_POST=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_VX_GRIDSTAT=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_VX_POINTSTAT=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_WRITE_DOPOST=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_QUILTING=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_PRINT_ESMF=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_USE_CRON_TO_RELAUNCH=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
